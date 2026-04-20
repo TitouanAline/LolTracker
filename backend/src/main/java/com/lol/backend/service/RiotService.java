@@ -29,13 +29,9 @@ public class RiotService {
     }
 
     public SummonerDto getSummoner(String name, String tag) {
+
         String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Riot-Token", apikey);
-
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
+        HttpEntity<String> entity = buildHeaders();
         ResponseEntity<String> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -55,20 +51,14 @@ public class RiotService {
                 return cache.get(puuid);
             }
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Riot-Token", apikey);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-
-            String matchIdsUrl = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/"
-                    + puuid + "/ids?start=0&count=1";
-
+            String matchIdsUrl = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=1";
+            HttpEntity<String> entity = buildHeaders();
             ResponseEntity<String> matchIdsResponse = restTemplate.exchange(
                     matchIdsUrl,
                     HttpMethod.GET,
                     entity,
                     String.class
             );
-            System.out.println(matchIdsResponse.getBody());
 
             ObjectMapper mapper = new ObjectMapper();
             List<String> matchIds = mapper.readValue(matchIdsResponse.getBody(), List.class);
@@ -112,5 +102,11 @@ public class RiotService {
         } catch (Exception e) {
             throw new RuntimeException("Erreur Riot API", e);
         }
+    }
+
+    private HttpEntity<String> buildHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apikey);
+        return new HttpEntity<>(headers);
     }
 }

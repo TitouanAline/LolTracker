@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SummonerGameDetailsDto {
     private String champion;
+    private String championIcon;
+    private String championSplashArt;
     private int kills;
     private int deaths;
     private int assists;

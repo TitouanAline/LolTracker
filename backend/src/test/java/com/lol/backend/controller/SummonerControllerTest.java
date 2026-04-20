@@ -35,19 +35,20 @@ public class SummonerControllerTest {
     @Test
     void shouldReturnLastGame() throws Exception {
 
-        SummonerGameDetailsDto dto = new SummonerGameDetailsDto("Ahri", 10, 2, 5, true);
+        SummonerGameDetailsDto dto = new SummonerGameDetailsDto("Ahri", "Null", "Null", 10, 2, 5, true);
 
         when(riotService.getGame("test-puuid", 0)).thenReturn(dto);
 
         mockMvc.perform(get("/summoner/test-puuid/game/0").contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$.champion").value("Ahri"))
-                        .andExpect(jsonPath("$.kills").value(10))
-                        .andExpect(jsonPath("$.deaths").value(2))
-                        .andExpect(jsonPath("$.assists").value(5))
-                        .andExpect(jsonPath("$.win").value(true));
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.champion").value("Ahri"))
+                .andExpect(jsonPath("$.kills").value(10))
+                .andExpect(jsonPath("$.deaths").value(2))
+                .andExpect(jsonPath("$.assists").value(5))
+                .andExpect(jsonPath("$.win").value(true));
     }
+
     @Test
     void shouldReturnSummoner() throws Exception {
 
@@ -56,10 +57,10 @@ public class SummonerControllerTest {
         when(riotService.getSummoner("test-summoner", "test-tag")).thenReturn(dto);
 
         mockMvc.perform(get("/summoner/test-summoner/test-tag").contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$.name").value("test-summoner"))
-                        .andExpect(jsonPath("$.tag").value("test-tag"))
-                        .andExpect(jsonPath("$.puuid").value("test-puuid"));
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("test-summoner"))
+                .andExpect(jsonPath("$.tag").value("test-tag"))
+                .andExpect(jsonPath("$.puuid").value("test-puuid"));
     }
 }

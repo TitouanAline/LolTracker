@@ -80,8 +80,8 @@ export class SummonerComponent {
               name: f.name,
               tag: f.tag,
               champion: match.champion,
-              championImage: `https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${match.champion}.png`,
-              splashImage: `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${match.champion}_0.jpg`,
+              championImage: match.championIcon,
+              splashImage: match.championSplashArt,
               kills: match.kills,
               deaths: match.deaths,
               assists: match.assists,
@@ -114,8 +114,8 @@ export class SummonerComponent {
   formatPlayer(data: any) {
     return {
       champion: data.champion,
-      championImage: `https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${data.champion}.png`,
-      splashImage: `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${data.champion}_0.jpg`,
+      championIcon: data.championIcon,
+      championSplashArt: data.championSplashArt,
       kills: data.kills,
       deaths: data.deaths,
       assists: data.assists,

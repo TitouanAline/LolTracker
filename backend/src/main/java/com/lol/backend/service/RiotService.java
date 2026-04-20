@@ -105,6 +105,8 @@ public class RiotService {
 
                 return new SummonerGameDetailsDto(
                         p.path("championName").asString(),
+                        getChampionIcon(p.path("championName").asString()),
+                        getChampionSplash(p.path("championName").asString()),
                         p.path("kills").asInt(),
                         p.path("deaths").asInt(),
                         p.path("assists").asInt(),
@@ -132,5 +134,13 @@ public class RiotService {
 
     private Boolean isValidValueInCache(String id) {
         return cache.containsKey(id) && !cache.get(id).isExpired();
+    }
+
+    private String getChampionIcon(String champion) {
+        return "https://ddragon.leagueoflegends.com/cdn/img/champion/" + champion + ".png";
+    }
+
+    private String getChampionSplash(String champion) {
+        return "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + champion + "_0.jpg";
     }
 }

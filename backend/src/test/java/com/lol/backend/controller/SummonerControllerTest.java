@@ -1,6 +1,7 @@
 package com.lol.backend.controller;
 
 import com.lol.backend.dto.LastGameDto;
+import com.lol.backend.dto.SummonerDto;
 import com.lol.backend.service.RiotService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -50,12 +51,15 @@ public class SummonerControllerTest {
     @Test
     void shouldReturnSummoner() throws Exception {
 
-        String puuid = "test-puuid";
+        SummonerDto dto = new SummonerDto("test-summoner", "test-tag", "test-puuid");
 
-        when(riotService.getSummoner("test-summoner", "test-tag")).thenReturn(puuid);
+        when(riotService.getSummoner("test-summoner", "test-tag")).thenReturn(dto);
 
         mockMvc.perform(get("/summoner/test-summoner/test-tag").contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
-                        .andExpect(content().string(puuid));
+                        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                        .andExpect(jsonPath("$.name").value("test-summoner"))
+                        .andExpect(jsonPath("$.tag").value("test-tag"))
+                        .andExpect(jsonPath("$.puuid").value("test-puuid"));
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.lol.backend.dto.LastGameDto;
+import com.lol.backend.dto.SummonerDto;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -27,7 +28,7 @@ public class RiotService {
         this.restTemplate = restTemplate;
     }
 
-    public String getSummoner(String name, String tag) {
+    public SummonerDto getSummoner(String name, String tag) {
         String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
 
         HttpHeaders headers = new HttpHeaders();
@@ -42,7 +43,8 @@ public class RiotService {
                 String.class
         );
 
-        return response.getBody();
+        SummonerDto summoner = new SummonerDto(name, tag, response.getBody());
+        return summoner;
     }
 
     public LastGameDto getLastGame(String puuid) {

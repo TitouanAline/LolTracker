@@ -1,5 +1,6 @@
 package com.lol.backend.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.lol.backend.dto.SummonerDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.util.CacheEntry;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -19,7 +21,7 @@ import tools.jackson.databind.ObjectMapper;
 public class RiotService {
 
     private final RestTemplate restTemplate;
-    private final Map<String, SummonerGameDetailsDto> cache = new ConcurrentHashMap<>();
+    private final Map<String, CacheEntry<SummonerGameDetailsDto>> cache = new ConcurrentHashMap<>();
 
     @Value("${riot.api.key}")
     private String apikey;
@@ -40,16 +42,16 @@ public class RiotService {
 
     public SummonerGameDetailsDto getGame(String puuid, int gameIndexDesc) {
 
-        if (cache.containsKey(puuid)) {
-            System.out.println("⚡ Cache HIT pour " + puuid);
-            return cache.get(puuid);
+        if (isValidValueInCache(puuid)) {
+            return cache.get(puuid).getValue();
         }
 
         String matchId = getMatchId(puuid, gameIndexDesc);
         JsonNode matchDetails = getMatchDetails(matchId);
         SummonerGameDetailsDto result = extractPlayerStats(matchDetails, puuid);
 
-        cache.put(puuid, result);
+        Instant expiresAt = Instant.now().plusSeconds(600);
+        cache.put(puuid, new CacheEntry<SummonerGameDetailsDto>(result, expiresAt));
 
         return result;
     }
@@ -57,7 +59,8 @@ public class RiotService {
     private String getMatchId(String puuid, int gameIndexDesc) {
 
         try {
-            String url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=" + gameIndexDesc + "&count=1";
+            String url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start="
+                    + gameIndexDesc + "&count=1";
 
             String body = get(url);
 
@@ -65,8 +68,7 @@ public class RiotService {
 
             List<String> matchIds = mapper.readValue(
                     body,
-                    mapper.getTypeFactory().constructCollectionType(List.class, String.class)
-            );
+                    mapper.getTypeFactory().constructCollectionType(List.class, String.class));
 
             if (matchIds.isEmpty()) {
                 throw new RuntimeException("Aucun match trouvé");
@@ -78,6 +80,7 @@ public class RiotService {
             throw new RuntimeException("Erreur récupération matchId", e);
         }
     }
+
     private JsonNode getMatchDetails(String matchId) {
 
         try {
@@ -92,6 +95,7 @@ public class RiotService {
             throw new RuntimeException("Erreur récupération match details", e);
         }
     }
+
     private SummonerGameDetailsDto extractPlayerStats(JsonNode matchDetails, String puuid) {
 
         JsonNode participants = matchDetails.path("info").path("participants");
@@ -104,8 +108,7 @@ public class RiotService {
                         p.path("kills").asInt(),
                         p.path("deaths").asInt(),
                         p.path("assists").asInt(),
-                        p.path("win").asBoolean()
-                );
+                        p.path("win").asBoolean());
             }
         }
 
@@ -123,8 +126,11 @@ public class RiotService {
                 url,
                 HttpMethod.GET,
                 buildHeaders(),
-                String.class
-        );
+                String.class);
         return response.getBody();
+    }
+
+    private Boolean isValidValueInCache(String id) {
+        return cache.containsKey(id) && !cache.get(id).isExpired();
     }
 }

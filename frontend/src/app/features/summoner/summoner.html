@@ -1,0 +1,104 @@
+<div class="app">
+
+  <div class="layout">
+
+<!-- LEFT : SEARCH -->
+<div class="left">
+
+  <div class="card">
+    <h1>League Tracker</h1>
+
+    <div class="search-box">
+      <input [(ngModel)]="name" placeholder="Game Name" />
+      <input [(ngModel)]="tag" placeholder="Tag (EUW...)" />
+      <button (click)="search()">Search</button>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div *ngIf="!loading && error">
+      <p class="error">{{ error }}</p>
+    </div>
+
+    <!-- RESULT -->
+    <ng-container *ngIf="result$ | async as result">
+      <div *ngIf="!loading && result">
+
+        <h2>Last Champion Played</h2>
+
+        <div 
+          class="champion-card"
+          [style.background-image]="'url(' + result.splashImage + ')'">
+
+          <img [src]="result.championImage" />
+
+          <p>{{ result.champion }}</p>
+
+          <p class="kda">
+            {{ result.kills }} / {{ result.deaths }} / {{ result.assists }}
+          </p>
+
+          <p [ngClass]="result.win ? 'win' : 'lose'">
+            {{ result.win ? 'Victory' : 'Defeat' }}
+          </p>
+
+        </div>
+
+      </div>
+    </ng-container>
+
+  </div>
+
+</div>
+
+<!-- RIGHT : FRIENDS -->
+<div class="right">
+
+  <div class="card">
+    <h2>Friends</h2>
+
+    <div class="friends-list" *ngIf="friends$ | async as friends">
+
+      <div 
+        *ngFor="let f of friends"
+        class="champion-card small"
+        [style.background-image]="!f.error ? 'url(' + f.splashImage + ')' : 'none'">
+
+        <ng-container *ngIf="!f.error; else errorTpl">
+
+          <img [src]="f.championImage" />
+
+          <p>{{ f.name }}</p>
+
+          <span class="champ">{{ f.champion }}</span>
+
+          <p class="kda">
+            {{ f.kills }} / {{ f.deaths }} / {{ f.assists }}
+          </p>
+
+          <p [ngClass]="f.win ? 'win' : 'lose'">
+            {{ f.win ? 'W' : 'L' }}
+          </p>
+
+        </ng-container>
+
+        <ng-template #errorTpl>
+          <p class="error">{{ f.name }} ❌</p>
+        </ng-template>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  </div>
+
+</div>

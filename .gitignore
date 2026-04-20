@@ -4,6 +4,7 @@ dist/
 
 # Spring Boot
 target/
+application-local.properties
 *.log
 
 # IDE

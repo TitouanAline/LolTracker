@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -18,8 +19,9 @@ public class SummonerController {
 
     private final RestTemplate restTemplate;
     private final Map<String, Object> cache = new ConcurrentHashMap<>();
-
-    private final String API_KEY = "RGAPI-0390055a-6ea6-468b-8ae2-a7c2b75981cf";
+    
+    @Value("${riot.api.key}")
+    private String apiKey;
 
     public SummonerController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -31,8 +33,7 @@ public class SummonerController {
         String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Riot-Token", API_KEY);
-
+        headers.set("X-Riot-Token", apiKey);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -48,7 +49,7 @@ public class SummonerController {
     public ResponseEntity<?> getLastGameChampion(@PathVariable String puuid) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Riot-Token", API_KEY);
+            headers.set("X-Riot-Token", apiKey);
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             String cacheKey = puuid;
@@ -118,6 +119,3 @@ public class SummonerController {
         }
     }
 }
-
-
-// PUUID : 14oRfhWW9VI65wkv8RBIIzQ0ZSowQYTtcWzVK0-M4-NOecgplDerrPqcqpEA5EBpPnc6KdR1Xkd0jg

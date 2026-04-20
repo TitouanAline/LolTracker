@@ -9,8 +9,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.lol.backend.dto.LastGameDto;
 import com.lol.backend.dto.SummonerDto;
+import com.lol.backend.dto.SummonerGameDetailsDto;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -19,7 +19,7 @@ import tools.jackson.databind.ObjectMapper;
 public class RiotService {
 
     private final RestTemplate restTemplate;
-    private final Map<String, LastGameDto> cache = new ConcurrentHashMap<>();
+    private final Map<String, SummonerGameDetailsDto> cache = new ConcurrentHashMap<>();
 
     @Value("${riot.api.key}")
     private String apikey;
@@ -31,82 +31,100 @@ public class RiotService {
     public SummonerDto getSummoner(String name, String tag) {
 
         String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
-        HttpEntity<String> entity = buildHeaders();
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                String.class
-        );
 
-        SummonerDto summoner = new SummonerDto(name, tag, response.getBody());
+        String body = get(url);
+
+        SummonerDto summoner = new SummonerDto(name, tag, body);
         return summoner;
     }
 
-    public LastGameDto getLastGame(String puuid) {
+    public SummonerGameDetailsDto getGame(String puuid, int gameIndexDesc) {
+
+        if (cache.containsKey(puuid)) {
+            System.out.println("⚡ Cache HIT pour " + puuid);
+            return cache.get(puuid);
+        }
+
+        String matchId = getMatchId(puuid, gameIndexDesc);
+        JsonNode matchDetails = getMatchDetails(matchId);
+        SummonerGameDetailsDto result = extractPlayerStats(matchDetails, puuid);
+
+        cache.put(puuid, result);
+
+        return result;
+    }
+
+    private String getMatchId(String puuid, int gameIndexDesc) {
 
         try {
-            if (cache.containsKey(puuid)) {
-                System.out.println("⚡ Cache HIT pour " + puuid);
-                return cache.get(puuid);
-            }
+            String url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=" + gameIndexDesc + "&count=1";
 
-            String matchIdsUrl = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=1";
-            HttpEntity<String> entity = buildHeaders();
-            ResponseEntity<String> matchIdsResponse = restTemplate.exchange(
-                    matchIdsUrl,
-                    HttpMethod.GET,
-                    entity,
-                    String.class
-            );
+            String body = get(url);
 
             ObjectMapper mapper = new ObjectMapper();
-            List<String> matchIds = mapper.readValue(matchIdsResponse.getBody(), List.class);
+
+            List<String> matchIds = mapper.readValue(
+                    body,
+                    mapper.getTypeFactory().constructCollectionType(List.class, String.class)
+            );
 
             if (matchIds.isEmpty()) {
                 throw new RuntimeException("Aucun match trouvé");
             }
 
-            String matchId = matchIds.get(0);
+            return matchIds.get(0);
 
-            String matchDetailUrl = "https://europe.api.riotgames.com/lol/match/v5/matches/" + matchId;
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur récupération matchId", e);
+        }
+    }
+    private JsonNode getMatchDetails(String matchId) {
 
-            ResponseEntity<String> matchResponse = restTemplate.exchange(
-                    matchDetailUrl,
-                    HttpMethod.GET,
-                    entity,
-                    String.class
-            );
+        try {
+            String url = "https://europe.api.riotgames.com/lol/match/v5/matches/" + matchId;
 
-            JsonNode root = mapper.readTree(matchResponse.getBody());
-            JsonNode participants = root.path("info").path("participants");
+            String body = get(url);
 
-            for (JsonNode p : participants) {
-                if (p.path("puuid").asString().equals(puuid)) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readTree(body);
 
-                    LastGameDto result = new LastGameDto(
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur récupération match details", e);
+        }
+    }
+    private SummonerGameDetailsDto extractPlayerStats(JsonNode matchDetails, String puuid) {
+
+        JsonNode participants = matchDetails.path("info").path("participants");
+
+        for (JsonNode p : participants) {
+            if (p.path("puuid").asString().equals(puuid)) {
+
+                return new SummonerGameDetailsDto(
                         p.path("championName").asString(),
                         p.path("kills").asInt(),
                         p.path("deaths").asInt(),
                         p.path("assists").asInt(),
                         p.path("win").asBoolean()
-                    );
-
-                    cache.put(puuid, result);
-                    return result;
-                }
+                );
             }
-
-            throw new RuntimeException("Joueur non trouvé");
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur Riot API", e);
         }
+
+        throw new RuntimeException("Joueur non trouvé dans le match");
     }
 
     private HttpEntity<String> buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apikey);
         return new HttpEntity<>(headers);
+    }
+
+    private String get(String url) {
+        ResponseEntity<String> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                buildHeaders(),
+                String.class
+        );
+        return response.getBody();
     }
 }

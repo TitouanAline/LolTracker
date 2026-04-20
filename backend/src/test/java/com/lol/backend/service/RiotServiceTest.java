@@ -1,6 +1,7 @@
 package com.lol.backend.service;
 
-import com.lol.backend.dto.LastGameDto;
+import com.lol.backend.dto.SummonerGameDetailsDto;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.*;
@@ -55,7 +56,7 @@ public class RiotServiceTest {
         RiotService service = new RiotService(restTemplate);
 
         // 5. Appel méthode
-        LastGameDto result = service.getLastGame("test-puuid");
+        SummonerGameDetailsDto result = service.getGame("test-puuid", 0);
 
         // 6. Vérifications
         assertNotNull(result);

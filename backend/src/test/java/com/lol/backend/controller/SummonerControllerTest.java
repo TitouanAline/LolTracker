@@ -1,7 +1,7 @@
 package com.lol.backend.controller;
 
-import com.lol.backend.dto.LastGameDto;
 import com.lol.backend.dto.SummonerDto;
+import com.lol.backend.dto.SummonerGameDetailsDto;
 import com.lol.backend.service.RiotService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,11 +35,11 @@ public class SummonerControllerTest {
     @Test
     void shouldReturnLastGame() throws Exception {
 
-        LastGameDto dto = new LastGameDto("Ahri", 10, 2, 5, true);
+        SummonerGameDetailsDto dto = new SummonerGameDetailsDto("Ahri", 10, 2, 5, true);
 
-        when(riotService.getLastGame("test-puuid")).thenReturn(dto);
+        when(riotService.getGame("test-puuid", 0)).thenReturn(dto);
 
-        mockMvc.perform(get("/summoner/last-game/test-puuid").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/summoner/test-puuid/game/0").contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                         .andExpect(jsonPath("$.champion").value("Ahri"))

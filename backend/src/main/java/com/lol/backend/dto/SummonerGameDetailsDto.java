@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LastGameDto {
+public class SummonerGameDetailsDto {
     private String champion;
     private int kills;
     private int deaths;

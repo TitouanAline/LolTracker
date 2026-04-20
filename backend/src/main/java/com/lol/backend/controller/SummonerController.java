@@ -3,7 +3,7 @@ package com.lol.backend.controller;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.lol.backend.dto.LastGameDto;
+import com.lol.backend.dto.SummonerGameDetailsDto;
 import com.lol.backend.service.RiotService;
 
 @RestController
@@ -22,8 +22,8 @@ public class SummonerController {
         return ResponseEntity.ok(riotService.getSummoner(name, tag));
     }
 
-    @GetMapping("/last-game/{puuid}")
-    public ResponseEntity<LastGameDto> getLastGame(@PathVariable String puuid) {
-        return ResponseEntity.ok(riotService.getLastGame(puuid));
+    @GetMapping("/{puuid}/game/{index}")
+    public ResponseEntity<SummonerGameDetailsDto> getLastGame(@PathVariable String puuid, @PathVariable int index) {
+        return ResponseEntity.ok(riotService.getGame(puuid, index));
     }
 }

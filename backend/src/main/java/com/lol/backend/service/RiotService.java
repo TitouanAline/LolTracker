@@ -57,7 +57,6 @@ public class RiotService {
             headers.set("X-Riot-Token", apikey);
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            // 1. match IDs
             String matchIdsUrl = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/"
                     + puuid + "/ids?start=0&count=1";
 
@@ -67,6 +66,7 @@ public class RiotService {
                     entity,
                     String.class
             );
+            System.out.println(matchIdsResponse.getBody());
 
             ObjectMapper mapper = new ObjectMapper();
             List<String> matchIds = mapper.readValue(matchIdsResponse.getBody(), List.class);
@@ -77,7 +77,6 @@ public class RiotService {
 
             String matchId = matchIds.get(0);
 
-            // 2. match detail
             String matchDetailUrl = "https://europe.api.riotgames.com/lol/match/v5/matches/" + matchId;
 
             ResponseEntity<String> matchResponse = restTemplate.exchange(

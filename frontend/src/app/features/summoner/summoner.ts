@@ -1,11 +1,11 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RiotService } from '../../core/services/riot.service';
+import { RiotService } from '../../../core/services/riot.service';
 import { finalize } from 'rxjs';
 
-import { FriendGameDetailDto } from '../../core/models/friend-game-details.dto';
-import { SummonerGameDetailsDto } from '../../core/models/summoner-game-details.dto';
+import { FriendGameDetailDto } from '../../../core/models/friend-game-details.dto';
+import { SummonerGameDetailsDto } from '../../../core/models/summoner-game-details.dto';
 
 @Component({
   selector: 'app-summoner',

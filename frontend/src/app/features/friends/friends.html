@@ -1,0 +1,25 @@
+<div class="card">
+  <h2>Friends</h2>
+
+  <div *ngIf="loading()">Loading...</div>
+
+  <div *ngIf="error()">{{ error() }}</div>
+
+  <div *ngIf="friends().length > 0" class="friends-list">
+    <div
+      *ngFor="let f of friends()"
+      class="champion-card small"
+      [style.background-image]="!f.error ? 'url(' + f.championSplashArt + ')' : 'none'"
+    >
+      <ng-container *ngIf="!f.error; else errorTpl">
+        <img [src]="f.championIcon" />
+        <p>{{ f.name }}</p>
+        <span>{{ f.champion }}</span>
+      </ng-container>
+
+      <ng-template #errorTpl>
+        <p>{{ f.name }} ❌</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

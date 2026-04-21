@@ -1,12 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { SummonerComponent } from '../features/summoner/summoner';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { NavbarComponent } from './shared/navbar/navbar';
 
 @Component({
   selector: 'app-root',
-  imports: [SummonerComponent],
+  imports: [RouterModule, NavbarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('lol-web-app');
-}
+export class App {}

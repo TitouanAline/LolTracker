@@ -1,4 +1,4 @@
-export interface FriendResult {
+export interface FriendGameDetailDto {
   name: string;
   tag: string;
   champion: string | null;

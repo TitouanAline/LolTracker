@@ -13,12 +13,12 @@ export class RiotService {
 
   constructor(private http: HttpClient) {}
 
-  getAccountPuuid(name: string, tag: string): Observable<SummonerDto> {
+  getSummoner(name: string, tag: string): Observable<SummonerDto> {
     return this.http.get<SummonerDto>(`${this.apiUrl}/${name}/${tag}`);
   }
 
   // récupérer dernier champion
-  getMatchDetails(puuid: string, index: number): Observable<SummonerGameDetailsDto> {
-    return this.http.get<SummonerGameDetailsDto>(`${this.apiUrl}/${puuid}/games/${index}`);
+  getGame(puuid: string, index: number): Observable<SummonerGameDetailsDto> {
+    return this.http.get<SummonerGameDetailsDto>(`${this.apiUrl}/${puuid}/game/${index}`);
   }
 }

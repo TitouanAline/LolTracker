@@ -3,19 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RiotService } from '../../core/services/riot.service';
 import { BehaviorSubject, switchMap, map, catchError, of, tap, forkJoin } from 'rxjs';
-
-type FriendResult = {
-  name: string;
-  tag: string;
-  champion: string | null;
-  championImage: string | null;
-  splashImage: string | null;
-  kills: number | null;
-  deaths: number | null;
-  assists: number | null;
-  win: boolean | null;
-  error?: boolean;
-};
+import { SummonerDto } from '../../core/models/summoner.dto';
+import { SummonerGameDetailsDto } from '../../core/models/summoner-game-details.dto';
+import { FriendGameDetailDto } from '../../core/models/friend-game-details.dto';
 
 @Component({
   selector: 'app-summoner',
@@ -25,6 +15,8 @@ type FriendResult = {
   styleUrls: ['./summoner.css'],
 })
 export class SummonerComponent {
+  constructor(private riotService: RiotService) {}
+
   name = '';
   tag = '';
 
@@ -44,10 +36,10 @@ export class SummonerComponent {
     switchMap((params) => {
       if (!params) return of(null);
 
-      return this.riotService.getAccountPuuid(params.name, params.tag).pipe(
-        switchMap((account: any) => this.riotService.getMatchDetails(account.puuid, 0)),
+      return this.riotService.getSummoner(params.name, params.tag).pipe(
+        switchMap((account) => this.riotService.getGame(account.puuid, 0)),
 
-        map((data: any) => this.formatPlayer(data)),
+        map((data) => data),
 
         catchError((err) => {
           console.error(err);
@@ -69,60 +61,44 @@ export class SummonerComponent {
   ];
 
   friends$ = of(this.friends).pipe(
-    switchMap((friends) => {
-      return Promise.all(
-        friends.map(async (f): Promise<FriendResult> => {
-          try {
-            const account: any = await this.riotService.getAccountPuuid(f.name, f.tag).toPromise();
-            const match: any = await this.riotService.getMatchDetails(account.puuid, 0).toPromise();
-
-            return {
-              name: f.name,
-              tag: f.tag,
-              champion: match.champion,
-              championImage: match.championIcon,
-              splashImage: match.championSplashArt,
-              kills: match.kills,
-              deaths: match.deaths,
-              assists: match.assists,
-              win: match.win,
-              error: false,
-            };
-          } catch (e) {
-            // 👇 TRÈS IMPORTANT : même structure !
-            return {
-              name: f.name,
-              tag: f.tag,
-              champion: null,
-              championImage: null,
-              splashImage: null,
-              kills: null,
-              deaths: null,
-              assists: null,
-              win: null,
-              error: true,
-            };
-          }
-        }),
-      );
-    }),
+    switchMap((friends) =>
+      forkJoin(
+        friends.map((f) =>
+          this.riotService.getSummoner(f.name, f.tag).pipe(
+            switchMap((account) => this.riotService.getGame(account.puuid, 0)),
+            map(
+              (match): FriendGameDetailDto => ({
+                name: f.name,
+                tag: f.tag,
+                champion: match.champion,
+                championImage: match.championIcon,
+                splashImage: match.championSplashArt,
+                kills: match.kills,
+                deaths: match.deaths,
+                assists: match.assists,
+                win: match.win,
+                error: false,
+              }),
+            ),
+            catchError(() =>
+              of({
+                name: f.name,
+                tag: f.tag,
+                champion: null,
+                championImage: null,
+                splashImage: null,
+                kills: null,
+                deaths: null,
+                assists: null,
+                win: null,
+                error: true,
+              }),
+            ),
+          ),
+        ),
+      ),
+    ),
   );
-
-  constructor(private riotService: RiotService) {}
-
-  // 🔥 FACTORISATION (très important)
-  formatPlayer(data: any) {
-    return {
-      champion: data.champion,
-      championIcon: data.championIcon,
-      championSplashArt: data.championSplashArt,
-      kills: data.kills,
-      deaths: data.deaths,
-      assists: data.assists,
-      win: data.win,
-    };
-  }
-
   search() {
     console.log('CLICK OK');
 

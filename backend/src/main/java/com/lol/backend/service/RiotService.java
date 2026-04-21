@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.lol.backend.dto.SummonerDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.mapper.SummonerMapper;
 import com.lol.backend.util.CacheEntry;
 
 import tools.jackson.databind.JsonNode;
@@ -36,8 +37,18 @@ public class RiotService {
 
         String body = get(url);
 
-        SummonerDto summoner = new SummonerDto(name, tag, body);
-        return summoner;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode json = mapper.readTree(body);
+
+            return new SummonerDto(
+                    json.get("gameName").asString(),
+                    json.get("tagLine").asString(),
+                    json.get("puuid").asString());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur parsing Riot API", e);
+        }
     }
 
     public SummonerGameDetailsDto getGame(String puuid, int gameIndexDesc) {
@@ -103,10 +114,8 @@ public class RiotService {
         for (JsonNode p : participants) {
             if (p.path("puuid").asString().equals(puuid)) {
 
-                return new SummonerGameDetailsDto(
+                return SummonerMapper.toDto(
                         p.path("championName").asString(),
-                        getChampionIcon(p.path("championName").asString()),
-                        getChampionSplash(p.path("championName").asString()),
                         p.path("kills").asInt(),
                         p.path("deaths").asInt(),
                         p.path("assists").asInt(),
@@ -134,13 +143,5 @@ public class RiotService {
 
     private Boolean isValidValueInCache(String id) {
         return cache.containsKey(id) && !cache.get(id).isExpired();
-    }
-
-    private String getChampionIcon(String champion) {
-        return "https://ddragon.leagueoflegends.com/cdn/img/champion/" + champion + ".png";
-    }
-
-    private String getChampionSplash(String champion) {
-        return "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + champion + "_0.jpg";
     }
 }

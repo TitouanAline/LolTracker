@@ -4,5 +4,5 @@ import { FriendsComponent } from './features/friends/friends';
 
 export const routes: Routes = [
   { path: '', component: SummonerComponent },
-  { path: 'friend', component: FriendsComponent },
+  { path: 'friends', component: FriendsComponent },
 ];

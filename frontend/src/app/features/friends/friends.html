@@ -1,25 +1,48 @@
-<div class="card">
-  <h2>Friends</h2>
+<div class="app">
+  <div class="layout">
+    <div class="card">
+      <h1>League Tracker</h1>
 
-  <div *ngIf="loading()">Loading...</div>
+      <!-- LOADING -->
+      <div *ngIf="loading()">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
 
-  <div *ngIf="error()">{{ error() }}</div>
+      <!-- ERROR -->
+      <div *ngIf="!loading() && error()">
+        <p class="error">{{ error() }}</p>
+      </div>
+      <div class="friends-scroll">
+        <div *ngFor="let f of friends()" class="friend-card" [class.error]="f.error">
+          <ng-container *ngIf="!f.error; else errorTpl">
+            <!-- LEFT -->
+            <div class="left">
+              <img [src]="f.championIcon" class="icon" />
 
-  <div *ngIf="friends().length > 0" class="friends-list">
-    <div
-      *ngFor="let f of friends()"
-      class="champion-card small"
-      [style.background-image]="!f.error ? 'url(' + f.championSplashArt + ')' : 'none'"
-    >
-      <ng-container *ngIf="!f.error; else errorTpl">
-        <img [src]="f.championIcon" />
-        <p>{{ f.name }}</p>
-        <span>{{ f.champion }}</span>
-      </ng-container>
+              <div class="info">
+                <p class="name">{{ f.name }}</p>
+                <p class="champ">{{ f.champion }}</p>
 
-      <ng-template #errorTpl>
-        <p>{{ f.name }} ❌</p>
-      </ng-template>
+                <p class="kda">{{ f.kills }} / {{ f.deaths }} / {{ f.assists }}</p>
+
+                <p [ngClass]="f.win ? 'win' : 'lose'">
+                  {{ f.win ? 'Victory' : 'Defeat' }}
+                </p>
+              </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="right">
+              <img [src]="f.championSplashArt" class="splash-img" />
+            </div>
+          </ng-container>
+
+          <ng-template #errorTpl>
+            <p class="error">{{ f.name }} ❌</p>
+          </ng-template>
+        </div>
+      </div>
     </div>
   </div>
 </div>

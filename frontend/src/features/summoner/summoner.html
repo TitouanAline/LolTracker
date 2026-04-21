@@ -55,10 +55,10 @@
           <div
             *ngFor="let f of friends"
             class="champion-card small"
-            [style.background-image]="!f.error ? 'url(' + f.splashImage + ')' : 'none'"
+            [style.background-image]="!f.error ? 'url(' + f.championSplashArt + ')' : 'none'"
           >
             <ng-container *ngIf="!f.error; else errorTpl">
-              <img [src]="f.championImage" />
+              <img [src]="f.championIcon" />
 
               <p>{{ f.name }}</p>
 

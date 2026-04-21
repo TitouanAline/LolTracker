@@ -2,6 +2,7 @@ package com.lol.backend.controller;
 
 import com.lol.backend.dto.SummonerDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.service.FriendService;
 import com.lol.backend.service.RiotService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +23,14 @@ public class SummonerControllerTest {
 
     private MockMvc mockMvc;
     private RiotService riotService;
+    private FriendService friendService;
 
     @BeforeEach
     void setup() {
         riotService = Mockito.mock(RiotService.class);
+        friendService = Mockito.mock(FriendService.class);
 
-        SummonerController controller = new SummonerController(riotService);
+        SummonerController controller = new SummonerController(riotService, friendService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }

@@ -10,9 +10,12 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.lol.backend.dto.FriendGameDto;
 import com.lol.backend.dto.SummonerDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.mapper.FriendMapper;
 import com.lol.backend.mapper.SummonerMapper;
+import com.lol.backend.model.Friend;
 import com.lol.backend.util.CacheEntry;
 
 import tools.jackson.databind.JsonNode;
@@ -65,6 +68,24 @@ public class RiotService {
         cache.put(puuid, new CacheEntry<SummonerGameDetailsDto>(result, expiresAt));
 
         return result;
+    }
+
+    public List<FriendGameDto> getFriendsGame(List<Friend> friends) {
+        return friends.stream()
+                .map(this::getFriendGame)
+                .toList();
+    }
+
+    private FriendGameDto getFriendGame(Friend friend) {
+        try {
+            SummonerDto account = getSummoner(friend.getName(), friend.getTag());
+            SummonerGameDetailsDto game = getGame(account.getPuuid(), 0);
+
+            return FriendMapper.mapSuccess(friend, game);
+
+        } catch (Exception e) {
+            return FriendMapper.mapError(friend);
+        }
     }
 
     private String getMatchId(String puuid, int gameIndexDesc) {

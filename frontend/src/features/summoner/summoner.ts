@@ -14,19 +14,12 @@ import { FriendGameDetailDto } from '../../core/models/friend-game-details.dto';
   styleUrls: ['./summoner.css'],
 })
 export class SummonerComponent implements OnInit {
-  friends = [
-    { name: 'Fyralll', tag: '5403' },
-    { name: 'G2 SkewMond', tag: '3327' },
-    { name: 'G2 Caps', tag: '1323' },
-    { name: 'Nathanzor', tag: 'EUW' },
-  ];
-
   friends$!: Observable<FriendGameDetailDto[]>;
 
   constructor(private riotService: RiotService) {}
 
   ngOnInit(): void {
-    this.friends$ = this.riotService.getFriendsGames(this.friends);
+    this.friends$ = this.riotService.getFriendsGames();
   }
 
   name = '';

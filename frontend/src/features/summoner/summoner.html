@@ -6,43 +6,41 @@
         <h1>League Tracker</h1>
 
         <div class="search-box">
-          <input [(ngModel)]="name" placeholder="Game Name" />
-          <input [(ngModel)]="tag" placeholder="Tag (EUW...)" />
+          <input [ngModel]="name()" (ngModelChange)="name.set($event)" placeholder="Game Name" />
+          <input [ngModel]="tag()" (ngModelChange)="tag.set($event)" placeholder="Tag (EUW...)" />
           <button (click)="search()">Search</button>
         </div>
 
         <!-- LOADING -->
-        <div *ngIf="loading">
+        <div *ngIf="loading()">
           <div class="spinner"></div>
           <p>Loading...</p>
         </div>
 
         <!-- ERROR -->
-        <div *ngIf="!loading && error">
-          <p class="error">{{ error }}</p>
+        <div *ngIf="!loading() && error()">
+          <p class="error">{{ error() }}</p>
         </div>
 
         <!-- RESULT -->
-        <ng-container *ngIf="result$ | async as result">
-          <div *ngIf="!loading && result">
-            <h2>Last Champion Played</h2>
+        <div *ngIf="!loading() && result() as result">
+          <h2>Last Champion Played</h2>
 
-            <div
-              class="champion-card"
-              [style.background-image]="'url(' + result.championSplashArt + ')'"
-            >
-              <img [src]="result.championIcon" />
+          <div
+            class="champion-card"
+            [style.background-image]="'url(' + result.championSplashArt + ')'"
+          >
+            <img [src]="result.championIcon" />
 
-              <p>{{ result.champion }}</p>
+            <p>{{ result.champion }}</p>
 
-              <p class="kda">{{ result.kills }} / {{ result.deaths }} / {{ result.assists }}</p>
+            <p class="kda">{{ result.kills }} / {{ result.deaths }} / {{ result.assists }}</p>
 
-              <p [ngClass]="result.win ? 'win' : 'lose'">
-                {{ result.win ? 'Victory' : 'Defeat' }}
-              </p>
-            </div>
+            <p [ngClass]="result.win ? 'win' : 'lose'">
+              {{ result.win ? 'Victory' : 'Defeat' }}
+            </p>
           </div>
-        </ng-container>
+        </div>
       </div>
     </div>
 
@@ -51,9 +49,9 @@
       <div class="card">
         <h2>Friends</h2>
 
-        <div class="friends-list" *ngIf="friends$ | async as friends">
+        <div class="friends-list" *ngIf="friends().length > 0">
           <div
-            *ngFor="let f of friends"
+            *ngFor="let f of friends()"
             class="champion-card small"
             [style.background-image]="!f.error ? 'url(' + f.championSplashArt + ')' : 'none'"
           >

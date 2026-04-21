@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 import { SummonerDto } from '../models/summoner.dto';
 import { SummonerGameDetailsDto } from '../models/summoner-game-details.dto';

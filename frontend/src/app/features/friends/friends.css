@@ -71,6 +71,14 @@
   padding-left: 50px;
 }
 
+.stat-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+  padding-left: 50px;
+}
+
 .name {
   font-size: 18px;
   font-weight: bold;

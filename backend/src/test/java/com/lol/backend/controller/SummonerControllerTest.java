@@ -38,7 +38,7 @@ public class SummonerControllerTest {
     @Test
     void shouldReturnLastGame() throws Exception {
 
-        SummonerGameDetailsDto dto = new SummonerGameDetailsDto("Ahri", "Null", "Null", 10, 2, 5, true);
+        SummonerGameDetailsDto dto = new SummonerGameDetailsDto("Ahri", "Null", "Null", 10, 2, 5, true, 2000, 1000, 12);
 
         when(riotService.getGame("test-puuid", 0)).thenReturn(dto);
 
@@ -49,7 +49,10 @@ public class SummonerControllerTest {
                 .andExpect(jsonPath("$.kills").value(10))
                 .andExpect(jsonPath("$.deaths").value(2))
                 .andExpect(jsonPath("$.assists").value(5))
-                .andExpect(jsonPath("$.win").value(true));
+                .andExpect(jsonPath("$.win").value(true))
+                .andExpect(jsonPath("$.goldEarned").value(2000))
+                .andExpect(jsonPath("$.damageDealt").value(1000))
+                .andExpect(jsonPath("$.visionScore").value(12));
     }
 
     @Test

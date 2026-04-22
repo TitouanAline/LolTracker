@@ -19,5 +19,9 @@ public class FriendGameDto {
     private Integer assists;
     private Boolean win;
 
+    private Integer goldEarned;
+    private Integer damageDealt;
+    private Integer visionScore;
+
     private boolean error;
 }

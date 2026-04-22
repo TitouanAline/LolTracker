@@ -140,7 +140,10 @@ public class RiotService {
                         p.path("kills").asInt(),
                         p.path("deaths").asInt(),
                         p.path("assists").asInt(),
-                        p.path("win").asBoolean());
+                        p.path("win").asBoolean(),
+                        p.path("goldEarned").asInt(),
+                        p.path("totalDamageDealtToChampions").asInt(),
+                        p.path("visionScore").asInt());
             }
         }
 

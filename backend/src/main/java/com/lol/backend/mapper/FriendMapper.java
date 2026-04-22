@@ -6,7 +6,7 @@ import com.lol.backend.model.Friend;
 
 public class FriendMapper {
 
-    private static final String VERSION = "13.1.1";
+    private static final String VERSION = "16.8.1";
 
     public static FriendGameDto mapError(Friend friend) {
         return new FriendGameDto(
@@ -15,7 +15,7 @@ public class FriendMapper {
                 null, null, null,
                 null, null, null,
                 null,
-                true);
+                null, null, null, true);
     }
 
     public static FriendGameDto mapSuccess(Friend friend, SummonerGameDetailsDto game) {
@@ -37,6 +37,9 @@ public class FriendMapper {
                 game.getDeaths(),
                 game.getAssists(),
                 game.isWin(),
+                game.getGoldEarned(),
+                game.getDamageDealt(),
+                game.getVisionScore(),
                 false);
     }
 }

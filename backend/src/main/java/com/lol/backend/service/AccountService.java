@@ -17,12 +17,11 @@ import tools.jackson.databind.ObjectMapper;
 public class AccountService {
 
     private final RestTemplate restTemplate;
+    private final String apiKey;
 
-    @Value("${riot.api.key}")
-    private String apikey;
-
-    public AccountService(RestTemplate restTemplate) {
+    public AccountService(RestTemplate restTemplate, @Value("${riot.api.key}") String apiKey) {
         this.restTemplate = restTemplate;
+        this.apiKey = apiKey;
     }
 
     public AccountDto getSummoner(String name, String tag) {
@@ -47,7 +46,7 @@ public class AccountService {
 
     private HttpEntity<String> buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Riot-Token", apikey);
+        headers.set("X-Riot-Token", apiKey);
         return new HttpEntity<>(headers);
     }
 

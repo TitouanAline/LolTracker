@@ -5,8 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ParticipantDto {
+public class GamePreviewDto {
+
     private String name;
+    private String tag;
     private String puuid;
 
     private String champion;
@@ -19,20 +21,8 @@ public class ParticipantDto {
     private boolean win;
 
     private int goldEarned;
-    private int goldSpent;
-
-    private int damageDealtToChampions;
-    private int totalDamageDealt;
-    private int damageTaken;
-
+    private int damage;
     private int visionScore;
-    private int wardsPlaced;
-    private int wardsKilled;
 
-    private int cs;
-    private double kdaRatio;
-    private int level;
-
-    private int turretKills;
-    private int inhibitorKills;
+    private double kda;
 }

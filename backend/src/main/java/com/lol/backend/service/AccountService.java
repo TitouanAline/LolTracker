@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.lol.backend.dto.AccountDto;
+import com.lol.backend.mapper.AccountMapper;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -24,7 +25,7 @@ public class AccountService {
         this.apiKey = apiKey;
     }
 
-    public AccountDto getSummoner(String name, String tag) {
+    public AccountDto getAccount(String name, String tag) {
 
         String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
 
@@ -34,10 +35,7 @@ public class AccountService {
         try {
             JsonNode json = mapper.readTree(body);
 
-            return new AccountDto(
-                    json.get("gameName").asString(),
-                    json.get("tagLine").asString(),
-                    json.get("puuid").asString());
+            return AccountMapper.toDto(json);
 
         } catch (Exception e) {
             throw new RuntimeException("Erreur parsing Riot API", e);

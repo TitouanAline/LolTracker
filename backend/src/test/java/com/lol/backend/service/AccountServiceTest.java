@@ -40,7 +40,7 @@ class AccountServiceTest {
                 any(HttpEntity.class),
                 eq(String.class))).thenReturn(response);
 
-        AccountDto result = accountService.getSummoner("Caps", "EUW");
+        AccountDto result = accountService.getAccount("Caps", "EUW");
 
         assertNotNull(result);
         assertEquals("Caps", result.getName());

@@ -5,39 +5,54 @@ import java.util.List;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.lol.backend.dto.FriendGameDto;
-import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.dto.AccountDto;
+import com.lol.backend.dto.GameDto;
+import com.lol.backend.dto.GamePreviewDto;
 import com.lol.backend.service.AccountService;
 import com.lol.backend.service.FriendService;
-import com.lol.backend.service.RiotService;
+import com.lol.backend.service.GameService;
 
 @RestController
 @RequestMapping("/summoner")
 @CrossOrigin(origins = "http://localhost:4200")
 public class SummonerController {
 
-    private final RiotService riotService;
     private final FriendService friendService;
     private final AccountService accountService;
+    private final GameService gameService;
 
-    public SummonerController(RiotService riotService, FriendService friendService, AccountService accountService) {
-        this.riotService = riotService;
+    public SummonerController(
+            FriendService friendService,
+            AccountService accountService,
+            GameService gameService) {
         this.friendService = friendService;
         this.accountService = accountService;
+        this.gameService = gameService;
     }
 
     @GetMapping("/{name}/{tag}")
-    public ResponseEntity<?> getSummoner(@PathVariable String name, @PathVariable String tag) {
-        return ResponseEntity.ok(accountService.getSummoner(name, tag));
+    public ResponseEntity<AccountDto> getAccount(@PathVariable String name, @PathVariable String tag) {
+        return ResponseEntity.ok(accountService.getAccount(name, tag));
     }
 
-    @GetMapping("/{puuid}/game/{index}")
-    public ResponseEntity<SummonerGameDetailsDto> getLastGame(@PathVariable String puuid, @PathVariable int index) {
-        return ResponseEntity.ok(riotService.getGame(puuid, index));
+    @GetMapping("/{name}/{tag}/lastgame")
+    public ResponseEntity<GameDto> getLastGame(@PathVariable String name, @PathVariable String tag) {
+        return ResponseEntity.ok(gameService.getLastGame(name, tag));
+    }
+
+    @GetMapping("/{name}/{tag}/game/{index}")
+    public ResponseEntity<GameDto> getGame(@PathVariable String name, @PathVariable String tag,
+            @PathVariable int index) {
+        return ResponseEntity.ok(gameService.getGame(name, tag, index));
     }
 
     @GetMapping("/friends/games")
-    public ResponseEntity<List<FriendGameDto>> getFriendsGames() {
-        return ResponseEntity.ok(riotService.getFriendsGame(friendService.getFriends()));
+    public ResponseEntity<List<GamePreviewDto>> getFriendsGames() {
+
+        List<GamePreviewDto> games = friendService.getFriends().stream()
+                .map(f -> gameService.getLastGamePreview(f.getName(), f.getTag()))
+                .toList();
+
+        return ResponseEntity.ok(games);
     }
 }

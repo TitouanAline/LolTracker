@@ -1,75 +1,113 @@
 package com.lol.backend.controller;
 
 import com.lol.backend.dto.AccountDto;
-import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.dto.GameDto;
+import com.lol.backend.dto.GamePreviewDto;
+import com.lol.backend.model.Friend;
 import com.lol.backend.service.AccountService;
 import com.lol.backend.service.FriendService;
-import com.lol.backend.service.RiotService;
-
-import org.junit.jupiter.api.BeforeEach;
+import com.lol.backend.service.GameService;
 import org.junit.jupiter.api.Test;
 
-import org.mockito.Mockito;
-
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.List;
+
+@WebMvcTest(SummonerController.class)
 public class SummonerControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
-    private RiotService riotService;
+
+    @MockitoBean
     private FriendService friendService;
+
+    @MockitoBean
     private AccountService accountService;
 
-    @BeforeEach
-    void setup() {
-        riotService = Mockito.mock(RiotService.class);
-        friendService = Mockito.mock(FriendService.class);
-        accountService = Mockito.mock(AccountService.class);
+    @MockitoBean
+    private GameService gameService;
 
-        SummonerController controller = new SummonerController(riotService, friendService, accountService);
+    @Test
+    void shouldReturnAccount() throws Exception {
 
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        AccountDto dto = new AccountDto("Caps", "EUW", "puuid123");
+
+        when(accountService.getAccount("Caps", "EUW"))
+                .thenReturn(dto);
+
+        mockMvc.perform(get("/summoner/Caps/EUW"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Caps"))
+                .andExpect(jsonPath("$.tag").value("EUW"))
+                .andExpect(jsonPath("$.puuid").value("puuid123"));
     }
 
     @Test
     void shouldReturnLastGame() throws Exception {
 
-        SummonerGameDetailsDto dto = new SummonerGameDetailsDto("Ahri", "Null", "Null", 10, 2, 5, true, 2000, 1000, 12);
+        GameDto dto = new GameDto("MATCH_1", 1800, "CLASSIC", List.of(), List.of());
 
-        when(riotService.getGame("test-puuid", 0)).thenReturn(dto);
+        when(gameService.getLastGame("Caps", "EUW"))
+                .thenReturn(dto);
 
-        mockMvc.perform(get("/summoner/test-puuid/game/0").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/summoner/Caps/EUW/lastgame"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.champion").value("Ahri"))
-                .andExpect(jsonPath("$.kills").value(10))
-                .andExpect(jsonPath("$.deaths").value(2))
-                .andExpect(jsonPath("$.assists").value(5))
-                .andExpect(jsonPath("$.win").value(true))
-                .andExpect(jsonPath("$.goldEarned").value(2000))
-                .andExpect(jsonPath("$.damageDealt").value(1000))
-                .andExpect(jsonPath("$.visionScore").value(12));
+                .andExpect(jsonPath("$.matchId").value("MATCH_1"));
     }
 
     @Test
-    void shouldReturnSummoner() throws Exception {
+    void shouldReturnGameByIndex() throws Exception {
 
-        AccountDto dto = new AccountDto("test-summoner", "test-tag", "test-puuid");
+        GameDto dto = new GameDto("MATCH_2", 2000, "ARAM", List.of(), List.of());
 
-        when(accountService.getSummoner("test-summoner", "test-tag")).thenReturn(dto);
+        when(gameService.getGame("Caps", "EUW", 2))
+                .thenReturn(dto);
 
-        mockMvc.perform(get("/summoner/test-summoner/test-tag").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/summoner/Caps/EUW/game/2"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value("test-summoner"))
-                .andExpect(jsonPath("$.tag").value("test-tag"))
-                .andExpect(jsonPath("$.puuid").value("test-puuid"));
+                .andExpect(jsonPath("$.matchId").value("MATCH_2"));
+    }
+
+    @Test
+    void shouldReturnFriendsGames() throws Exception {
+
+        // mock friends
+        List<Friend> friends = List.of(
+                new Friend("Caps", "EUW"),
+                new Friend("Bob", "EUW"));
+
+        when(friendService.getFriends()).thenReturn(friends);
+
+        when(gameService.getLastGamePreview("Caps", "EUW"))
+                .thenReturn(new GamePreviewDto(
+                        "Caps", "EUW", "p1",
+                        "Ahri", "icon", "splash",
+                        10, 2, 5, true,
+                        12000, 20000, 20,
+                        7.5));
+
+        when(gameService.getLastGamePreview("Bob", "EUW"))
+                .thenReturn(new GamePreviewDto(
+                        "Bob", "EUW", "p2",
+                        "Garen", "icon", "splash",
+                        5, 3, 8, false,
+                        9000, 15000, 10,
+                        4.3));
+
+        mockMvc.perform(get("/summoner/friends/games"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").value("Caps"))
+                .andExpect(jsonPath("$[0].champion").value("Ahri"))
+                .andExpect(jsonPath("$[1].name").value("Bob"));
     }
 }

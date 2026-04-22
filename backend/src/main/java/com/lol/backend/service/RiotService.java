@@ -61,7 +61,7 @@ public class RiotService {
 
     private FriendGameDto getFriendGame(Friend friend) {
         try {
-            AccountDto account = accountService.getSummoner(friend.getName(), friend.getTag());
+            AccountDto account = accountService.getAccount(friend.getName(), friend.getTag());
             SummonerGameDetailsDto game = getGame(account.getPuuid(), 0);
 
             return FriendMapper.mapSuccess(account, game);

@@ -1,0 +1,137 @@
+package com.lol.backend.service;
+
+import com.lol.backend.dto.AccountDto;
+import com.lol.backend.dto.GameDto;
+import com.lol.backend.dto.GamePreviewDto;
+import com.lol.backend.dto.ParticipantDto;
+import com.lol.backend.mapper.GameMapper;
+import com.lol.backend.mapper.GamePreviewMapper;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class GameService {
+
+    private final RestTemplate restTemplate;
+    private final AccountService accountService;
+    private final String apiKey;
+
+    public GameService(
+            RestTemplate restTemplate,
+            AccountService accountService,
+            @Value("${riot.api.key}") String apiKey) {
+        this.restTemplate = restTemplate;
+        this.accountService = accountService;
+        this.apiKey = apiKey;
+    }
+
+    public GameDto getLastGame(String name, String tag) {
+
+        AccountDto account = accountService.getAccount(name, tag);
+
+        String matchId = getMatchId(account.getPuuid(), 0);
+
+        JsonNode matchDetails = getMatchDetails(matchId);
+
+        return GameMapper.toDto(matchDetails);
+    }
+
+    public GameDto getGame(String name, String tag, int index) {
+
+        AccountDto account = accountService.getAccount(name, tag);
+
+        String matchId = getMatchId(account.getPuuid(), index);
+
+        JsonNode matchDetails = getMatchDetails(matchId);
+
+        return GameMapper.toDto(matchDetails);
+    }
+
+    public GamePreviewDto getLastGamePreview(String name, String tag) {
+
+        try {
+            AccountDto account = accountService.getAccount(name, tag);
+
+            String matchId = getMatchId(account.getPuuid(), 0);
+
+            JsonNode matchDetails = getMatchDetails(matchId);
+
+            GameDto game = GameMapper.toDto(matchDetails);
+
+            ParticipantDto player = findPlayer(game, account.getPuuid());
+
+            return GamePreviewMapper.from(
+                    name, tag, account.getPuuid(),
+                    player);
+
+        } catch (Exception e) {
+            return GamePreviewMapper.error(name, tag);
+        }
+    }
+
+    private String getMatchId(String puuid, int index) {
+
+        String url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/"
+                + puuid + "/ids?start=" + index + "&count=1";
+
+        String body = get(url);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String[] matchIds = mapper.readValue(body, String[].class);
+            return matchIds[0];
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur récupération matchId", e);
+        }
+    }
+
+    private JsonNode getMatchDetails(String matchId) {
+
+        String url = "https://europe.api.riotgames.com/lol/match/v5/matches/" + matchId;
+
+        String body = get(url);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readTree(body);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur parsing matchDetails", e);
+        }
+    }
+
+    private String get(String url) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                String.class);
+
+        return response.getBody();
+    }
+
+    private ParticipantDto findPlayer(GameDto game, String puuid) {
+
+        return game.getTeam1().stream()
+                .filter(p -> p.getPuuid().equals(puuid))
+                .findFirst()
+                .orElseGet(() -> game.getTeam2().stream()
+                        .filter(p -> p.getPuuid().equals(puuid))
+                        .findFirst()
+                        .orElseThrow());
+    }
+}

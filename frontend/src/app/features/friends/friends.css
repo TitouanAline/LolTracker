@@ -67,6 +67,10 @@
   margin: 0;
 }
 
+.stats {
+  padding-left: 50px;
+}
+
 .name {
   font-size: 18px;
   font-weight: bold;

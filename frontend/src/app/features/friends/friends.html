@@ -30,6 +30,11 @@
                   {{ f.win ? 'Victory' : 'Defeat' }}
                 </p>
               </div>
+              <div class="info">
+                <p class="stats">💰 {{ formatNumber(f.goldEarned) }}</p>
+                <p class="stats">⚔️ {{ formatNumber(f.damageDealt) }}</p>
+                <p class="stats">👁️ {{ f.visionScore }}</p>
+              </div>
             </div>
 
             <!-- RIGHT -->

@@ -8,5 +8,8 @@ export interface FriendGameDetailDto {
   deaths: number | null;
   assists: number | null;
   win: boolean | null;
+  goldEarned: number | null;
+  damageDealt: number | null;
+  visionScore: number | null;
   error?: boolean;
 }

@@ -26,4 +26,14 @@ export class FriendsComponent implements OnInit {
       complete: () => this.loading.set(false),
     });
   }
+
+  formatNumber(value: number | null): String | null {
+    if (value == null) {
+      return null;
+    }
+    if (value >= 1000) {
+      return (value / 1000).toFixed(1).replace('.0', '') + 'k';
+    }
+    return value.toString();
+  }
 }

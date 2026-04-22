@@ -2,6 +2,7 @@ package com.lol.backend.controller;
 
 import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.service.AccountService;
 import com.lol.backend.service.FriendService;
 import com.lol.backend.service.RiotService;
 
@@ -24,13 +25,15 @@ public class SummonerControllerTest {
     private MockMvc mockMvc;
     private RiotService riotService;
     private FriendService friendService;
+    private AccountService accountService;
 
     @BeforeEach
     void setup() {
         riotService = Mockito.mock(RiotService.class);
         friendService = Mockito.mock(FriendService.class);
+        accountService = Mockito.mock(AccountService.class);
 
-        SummonerController controller = new SummonerController(riotService, friendService);
+        SummonerController controller = new SummonerController(riotService, friendService, accountService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -60,7 +63,7 @@ public class SummonerControllerTest {
 
         AccountDto dto = new AccountDto("test-summoner", "test-tag", "test-puuid");
 
-        when(riotService.getSummoner("test-summoner", "test-tag")).thenReturn(dto);
+        when(accountService.getSummoner("test-summoner", "test-tag")).thenReturn(dto);
 
         mockMvc.perform(get("/summoner/test-summoner/test-tag").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

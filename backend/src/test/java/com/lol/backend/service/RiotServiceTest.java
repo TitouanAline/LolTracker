@@ -50,7 +50,8 @@ public class RiotServiceTest {
         any(),
         eq(String.class))).thenReturn(new ResponseEntity<>(matchDetailJson, HttpStatus.OK));
 
-    RiotService service = new RiotService(restTemplate);
+    AccountService accountService = new AccountService(restTemplate);
+    RiotService service = new RiotService(restTemplate, accountService);
 
     SummonerGameDetailsDto result = service.getGame("test-puuid", 0);
 

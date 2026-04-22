@@ -27,31 +27,14 @@ public class RiotService {
     private final RestTemplate restTemplate;
     private final Map<String, CacheEntry<SummonerGameDetailsDto>> cache = new ConcurrentHashMap<>();
 
+    private final AccountService accountService;
+
     @Value("${riot.api.key}")
     private String apikey;
 
-    public RiotService(RestTemplate restTemplate) {
+    public RiotService(RestTemplate restTemplate, AccountService accountService) {
         this.restTemplate = restTemplate;
-    }
-
-    public AccountDto getSummoner(String name, String tag) {
-
-        String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
-
-        String body = get(url);
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode json = mapper.readTree(body);
-
-            return new AccountDto(
-                    json.get("gameName").asString(),
-                    json.get("tagLine").asString(),
-                    json.get("puuid").asString());
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur parsing Riot API", e);
-        }
+        this.accountService = accountService;
     }
 
     public SummonerGameDetailsDto getGame(String puuid, int gameIndexDesc) {
@@ -78,7 +61,7 @@ public class RiotService {
 
     private FriendGameDto getFriendGame(Friend friend) {
         try {
-            AccountDto account = getSummoner(friend.getName(), friend.getTag());
+            AccountDto account = accountService.getSummoner(friend.getName(), friend.getTag());
             SummonerGameDetailsDto game = getGame(account.getPuuid(), 0);
 
             return FriendMapper.mapSuccess(account, game);

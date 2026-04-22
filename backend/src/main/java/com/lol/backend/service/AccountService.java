@@ -14,14 +14,14 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
-public class SummonerService {
+public class AccountService {
 
     private final RestTemplate restTemplate;
 
     @Value("${riot.api.key}")
     private String apikey;
 
-    public SummonerService(RestTemplate restTemplate) {
+    public AccountService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

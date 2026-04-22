@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.lol.backend.dto.FriendGameDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
+import com.lol.backend.service.AccountService;
 import com.lol.backend.service.FriendService;
 import com.lol.backend.service.RiotService;
 
@@ -17,15 +18,17 @@ public class SummonerController {
 
     private final RiotService riotService;
     private final FriendService friendService;
+    private final AccountService accountService;
 
-    public SummonerController(RiotService riotService, FriendService friendService) {
+    public SummonerController(RiotService riotService, FriendService friendService, AccountService accountService) {
         this.riotService = riotService;
         this.friendService = friendService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/{name}/{tag}")
     public ResponseEntity<?> getSummoner(@PathVariable String name, @PathVariable String tag) {
-        return ResponseEntity.ok(riotService.getSummoner(name, tag));
+        return ResponseEntity.ok(accountService.getSummoner(name, tag));
     }
 
     @GetMapping("/{puuid}/game/{index}")

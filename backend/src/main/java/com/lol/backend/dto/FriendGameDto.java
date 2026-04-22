@@ -9,6 +9,7 @@ public class FriendGameDto {
 
     private String name;
     private String tag;
+    private String puuid;
 
     private String champion;
     private String championIcon;

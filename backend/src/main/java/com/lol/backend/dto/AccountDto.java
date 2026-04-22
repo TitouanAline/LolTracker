@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SummonerDto {
+public class AccountDto {
     private String name;
     private String tag;
     private String puuid;

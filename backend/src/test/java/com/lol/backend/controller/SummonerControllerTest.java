@@ -1,6 +1,6 @@
 package com.lol.backend.controller;
 
-import com.lol.backend.dto.SummonerDto;
+import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
 import com.lol.backend.service.FriendService;
 import com.lol.backend.service.RiotService;
@@ -58,7 +58,7 @@ public class SummonerControllerTest {
     @Test
     void shouldReturnSummoner() throws Exception {
 
-        SummonerDto dto = new SummonerDto("test-summoner", "test-tag", "test-puuid");
+        AccountDto dto = new AccountDto("test-summoner", "test-tag", "test-puuid");
 
         when(riotService.getSummoner("test-summoner", "test-tag")).thenReturn(dto);
 

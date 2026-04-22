@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RiotService } from '../../../core/services/riot.service';
 import { FriendGameDetailDto } from '../../../core/models/friend-game-details.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-friends',
@@ -11,7 +12,10 @@ import { FriendGameDetailDto } from '../../../core/models/friend-game-details.dt
   styleUrls: ['./friends.css'],
 })
 export class FriendsComponent implements OnInit {
-  constructor(private riotService: RiotService) {}
+  constructor(
+    private riotService: RiotService,
+    private router: Router,
+  ) {}
 
   friends = signal<FriendGameDetailDto[]>([]);
   loading = signal(false);
@@ -35,5 +39,9 @@ export class FriendsComponent implements OnInit {
       return (value / 1000).toFixed(1).replace('.0', '') + 'k';
     }
     return value.toString();
+  }
+
+  goToDetail(friend: FriendGameDetailDto) {
+    this.router.navigate(['/friend', friend.puuid]);
   }
 }

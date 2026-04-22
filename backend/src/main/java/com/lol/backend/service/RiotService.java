@@ -10,11 +10,11 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.FriendGameDto;
-import com.lol.backend.dto.SummonerDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
 import com.lol.backend.mapper.FriendMapper;
-import com.lol.backend.mapper.SummonerMapper;
+import com.lol.backend.mapper.SummonerDetailsMapper;
 import com.lol.backend.model.Friend;
 import com.lol.backend.util.CacheEntry;
 
@@ -34,7 +34,7 @@ public class RiotService {
         this.restTemplate = restTemplate;
     }
 
-    public SummonerDto getSummoner(String name, String tag) {
+    public AccountDto getSummoner(String name, String tag) {
 
         String url = "https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + name + "/" + tag;
 
@@ -44,7 +44,7 @@ public class RiotService {
         try {
             JsonNode json = mapper.readTree(body);
 
-            return new SummonerDto(
+            return new AccountDto(
                     json.get("gameName").asString(),
                     json.get("tagLine").asString(),
                     json.get("puuid").asString());
@@ -78,10 +78,10 @@ public class RiotService {
 
     private FriendGameDto getFriendGame(Friend friend) {
         try {
-            SummonerDto account = getSummoner(friend.getName(), friend.getTag());
+            AccountDto account = getSummoner(friend.getName(), friend.getTag());
             SummonerGameDetailsDto game = getGame(account.getPuuid(), 0);
 
-            return FriendMapper.mapSuccess(friend, game);
+            return FriendMapper.mapSuccess(account, game);
 
         } catch (Exception e) {
             return FriendMapper.mapError(friend);
@@ -135,7 +135,7 @@ public class RiotService {
         for (JsonNode p : participants) {
             if (p.path("puuid").asString().equals(puuid)) {
 
-                return SummonerMapper.toDto(
+                return SummonerDetailsMapper.toDto(
                         p.path("championName").asString(),
                         p.path("kills").asInt(),
                         p.path("deaths").asInt(),

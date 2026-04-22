@@ -1,5 +1,6 @@
 package com.lol.backend.mapper;
 
+import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.FriendGameDto;
 import com.lol.backend.dto.SummonerGameDetailsDto;
 import com.lol.backend.model.Friend;
@@ -12,13 +13,14 @@ public class FriendMapper {
         return new FriendGameDto(
                 friend.getName(),
                 friend.getTag(),
+                null,
                 null, null, null,
                 null, null, null,
                 null,
                 null, null, null, true);
     }
 
-    public static FriendGameDto mapSuccess(Friend friend, SummonerGameDetailsDto game) {
+    public static FriendGameDto mapSuccess(AccountDto friend, SummonerGameDetailsDto game) {
         String champion = game.getChampion();
 
         String icon = "https://ddragon.leagueoflegends.com/cdn/"
@@ -30,6 +32,7 @@ public class FriendMapper {
         return new FriendGameDto(
                 friend.getName(),
                 friend.getTag(),
+                friend.getPuuid(),
                 champion,
                 icon,
                 splash,

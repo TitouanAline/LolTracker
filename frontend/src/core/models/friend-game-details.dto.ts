@@ -1,6 +1,7 @@
 export interface FriendGameDetailDto {
   name: string;
   tag: string;
+  puuid: string | null;
   champion: string | null;
   championIcon: string | null;
   championSplashArt: string | null;

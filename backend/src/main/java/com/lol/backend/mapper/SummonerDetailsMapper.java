@@ -2,7 +2,7 @@ package com.lol.backend.mapper;
 
 import com.lol.backend.dto.SummonerGameDetailsDto;
 
-public class SummonerMapper {
+public class SummonerDetailsMapper {
 
         private static final String VERSION = "16.8.1";
 

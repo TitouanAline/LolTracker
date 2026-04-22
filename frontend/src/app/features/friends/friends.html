@@ -14,7 +14,12 @@
         <p class="error">{{ error() }}</p>
       </div>
       <div class="friends-scroll">
-        <div *ngFor="let f of friends()" class="friend-card" [class.error]="f.error">
+        <div
+          *ngFor="let f of friends()"
+          class="friend-card"
+          [class.error]="f.error"
+          (click)="goToDetail(f)"
+        >
           <ng-container *ngIf="!f.error; else errorTpl">
             <!-- LEFT -->
             <div class="left">

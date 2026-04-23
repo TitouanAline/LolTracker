@@ -3,6 +3,7 @@ package com.lol.backend.controller;
 import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.GameDto;
 import com.lol.backend.dto.GamePreviewDto;
+import com.lol.backend.dto.ParticipantDto;
 import com.lol.backend.model.Friend;
 import com.lol.backend.service.AccountService;
 import com.lol.backend.service.FriendService;
@@ -52,16 +53,26 @@ public class SummonerControllerTest {
     }
 
     @Test
-    void shouldReturnLastGame() throws Exception {
+    void shouldReturnLastGamePlayer() throws Exception {
 
-        GameDto dto = new GameDto("MATCH_1", 1800, "CLASSIC", List.of(), List.of());
+        ParticipantDto dto = new ParticipantDto("Caps",
+                "1234",
+                "Ahri",
+                "",
+                "",
+                0, 0, 0,
+                true, 0, 0,
+                0, 0,
+                0,
+                0, 0, 0,
+                0, 0, 0, 0, 0);
 
-        when(gameService.getLastGame("Caps", "EUW"))
+        when(gameService.getLastGamePlayer("Caps", "EUW"))
                 .thenReturn(dto);
 
-        mockMvc.perform(get("/summoner/Caps/EUW/lastgame"))
+        mockMvc.perform(get("/summoner/Caps/EUW/lastgame/player"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.matchId").value("MATCH_1"));
+                .andExpect(jsonPath("$.champion").value("Ahri"));
     }
 
     @Test

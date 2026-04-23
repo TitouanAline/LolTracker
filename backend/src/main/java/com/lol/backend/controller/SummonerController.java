@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.GameDto;
 import com.lol.backend.dto.GamePreviewDto;
+import com.lol.backend.dto.ParticipantDto;
 import com.lol.backend.service.AccountService;
 import com.lol.backend.service.FriendService;
 import com.lol.backend.service.GameService;
@@ -35,9 +36,9 @@ public class SummonerController {
         return ResponseEntity.ok(accountService.getAccount(name, tag));
     }
 
-    @GetMapping("/{name}/{tag}/lastgame")
-    public ResponseEntity<GameDto> getLastGame(@PathVariable String name, @PathVariable String tag) {
-        return ResponseEntity.ok(gameService.getLastGame(name, tag));
+    @GetMapping("/{name}/{tag}/lastgame/player")
+    public ResponseEntity<ParticipantDto> getLastGamePlayer(@PathVariable String name, @PathVariable String tag) {
+        return ResponseEntity.ok(gameService.getLastGamePlayer(name, tag));
     }
 
     @GetMapping("/{name}/{tag}/game/{index}")

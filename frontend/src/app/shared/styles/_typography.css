@@ -1,0 +1,36 @@
+h1 {
+  font-family: 'Cinzel', serif;
+
+  font-size: 32px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+
+  color: #c89b3c;
+
+  text-align: center;
+  margin-bottom: 20px;
+
+  /* effet glow */
+  text-shadow:
+    0 0 5px rgba(200, 155, 60, 0.6),
+    0 0 10px rgba(200, 155, 60, 0.4);
+
+  /* petite ligne en dessous */
+  position: relative;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  margin: 10px auto 0;
+
+  background: linear-gradient(to right, transparent, #c89b3c, transparent);
+}
+
+.error {
+  color: #f44336;
+  text-align: center;
+}

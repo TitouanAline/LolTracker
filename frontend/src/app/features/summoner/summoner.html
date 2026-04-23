@@ -1,77 +1,56 @@
 <div class="app">
-  <div class="layout">
-    <!-- LEFT : SEARCH -->
-    <div class="left">
-      <div class="card">
-        <h1>League Tracker</h1>
+  <div class="layout center">
+    <div class="card search-card">
+      <h1>League Tracker</h1>
 
-        <div class="search-box">
-          <input [ngModel]="name()" (ngModelChange)="name.set($event)" placeholder="Game Name" />
-          <input [ngModel]="tag()" (ngModelChange)="tag.set($event)" placeholder="Tag (EUW...)" />
-          <button (click)="search()">Search</button>
-        </div>
+      <!-- SEARCH -->
+      <div class="search-box">
+        <input [ngModel]="name()" (ngModelChange)="name.set($event)" placeholder="Game Name" />
 
-        <!-- LOADING -->
-        <div *ngIf="loading()">
-          <div class="spinner"></div>
-          <p>Loading...</p>
-        </div>
+        <input [ngModel]="tag()" (ngModelChange)="tag.set($event)" placeholder="Tag (EUW...)" />
 
-        <!-- ERROR -->
-        <div *ngIf="!loading() && error()">
-          <p class="error">{{ error() }}</p>
-        </div>
-
-        <!-- RESULT -->
-        <div *ngIf="!loading() && result() as result">
-          <h2>Last Champion Played</h2>
-
-          <div
-            class="champion-card"
-            [style.background-image]="'url(' + result.championSplashArt + ')'"
-          >
-            <img [src]="result.championIcon" />
-
-            <p>{{ result.champion }}</p>
-
-            <p class="kda">{{ result.kills }} / {{ result.deaths }} / {{ result.assists }}</p>
-
-            <p [ngClass]="result.win ? 'win' : 'lose'">
-              {{ result.win ? 'Victory' : 'Defeat' }}
-            </p>
-          </div>
-        </div>
+        <button (click)="search()">Search</button>
       </div>
-    </div>
 
-    <!-- RIGHT : FRIENDS -->
-    <div class="right">
-      <div class="card">
-        <h2>Friends</h2>
+      <!-- LOADING -->
+      <div *ngIf="loading()" class="center-block">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
 
-        <div class="friends-list" *ngIf="friends().length > 0">
-          <div
-            *ngFor="let f of friends()"
-            class="champion-card small"
-            [style.background-image]="!f.error ? 'url(' + f.championSplashArt + ')' : 'none'"
-          >
-            <ng-container *ngIf="!f.error; else errorTpl">
-              <img [src]="f.championIcon" />
+      <!-- ERROR -->
+      <div *ngIf="!loading() && error()" class="center-block">
+        <p class="error">{{ error() }}</p>
+      </div>
 
-              <p>{{ f.name }}</p>
+      <div *ngIf="!loading() && result() as result" class="result">
+        <div class="player-card">
+          <!-- SPLASH -->
+          <img class="splash" [src]="result.championSplashArt" />
 
-              <span class="champ">{{ f.champion }}</span>
+          <!-- OVERLAY -->
+          <div class="overlay">
+            <!-- LEFT -->
+            <div class="left">
+              <img class="icon" [src]="result.championIcon" />
 
-              <p class="kda">{{ f.kills }} / {{ f.deaths }} / {{ f.assists }}</p>
+              <div class="info">
+                <h2>{{ result.name }}</h2>
+                <p class="champ">{{ result.champion }}</p>
 
-              <p [ngClass]="f.win ? 'win' : 'lose'">
-                {{ f.win ? 'W' : 'L' }}
-              </p>
-            </ng-container>
+                <p class="kda">
+                  {{ result.kills }} / {{ result.deaths }} / {{ result.assists }}
+                  <span class="ratio">({{ result.kdaRatio | number: '1.1-1' }})</span>
+                </p>
+              </div>
+            </div>
 
-            <ng-template #errorTpl>
-              <p class="error">{{ f.name }} ❌</p>
-            </ng-template>
+            <!-- RIGHT -->
+            <div class="right">
+              <div class="badge" [ngClass]="result.win ? 'win' : 'lose'">
+                {{ result.win ? 'Victory' : 'Defeat' }}
+              </div>
+            </div>
           </div>
         </div>
       </div>

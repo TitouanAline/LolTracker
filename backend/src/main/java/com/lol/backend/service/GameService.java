@@ -31,7 +31,7 @@ public class GameService {
         this.apiKey = apiKey;
     }
 
-    public GameDto getLastGame(String name, String tag) {
+    public ParticipantDto getLastGamePlayer(String name, String tag) {
 
         AccountDto account = accountService.getAccount(name, tag);
 
@@ -39,7 +39,9 @@ public class GameService {
 
         JsonNode matchDetails = getMatchDetails(matchId);
 
-        return GameMapper.toDto(matchDetails);
+        GameDto game = GameMapper.toDto(matchDetails);
+
+        return findPlayer(game, account.getPuuid());
     }
 
     public GameDto getGame(String name, String tag, int index) {

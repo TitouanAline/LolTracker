@@ -1,0 +1,26 @@
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+  background: radial-gradient(circle at top, #0a1428, #020c1a);
+  min-height: 100vh;
+  color: #f0e6d2;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #c89b3c;
+  border-radius: 12px;
+  background: rgba(10, 20, 40, 0.95);
+
+  box-shadow:
+    0 0 20px rgba(200, 155, 60, 0.2),
+    inset 0 0 10px rgba(200, 155, 60, 0.1);
+}

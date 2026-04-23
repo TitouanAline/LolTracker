@@ -1,4 +1,4 @@
-@import '../../shared/styles/_cards.css';
+@import '../../shared/styles/global.css';
 
 .friends-scroll {
   display: flex;

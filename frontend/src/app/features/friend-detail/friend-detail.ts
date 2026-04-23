@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RiotService } from '../../../core/services/riot.service';
-import {} from '../../../core/models/friend-game-details.dto';
+import { RiotService } from '../../core/services/riot.service';
+import {} from '../../core/models/friend-game-details.dto';
 import { CommonModule } from '@angular/common';
 
 @Component({

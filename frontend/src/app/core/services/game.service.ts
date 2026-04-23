@@ -14,4 +14,8 @@ export class GameService {
   getLastGamePlayer(name: string, tag: string): Observable<ParticipantDto> {
     return this.http.get<ParticipantDto>(`${this.apiUrl}/${name}/${tag}/lastgame/player`);
   }
+
+  getLastGameFriends(): Observable<ParticipantDto[]> {
+    return this.http.get<ParticipantDto[]>(`${this.apiUrl}/friends/lastgame`);
+  }
 }

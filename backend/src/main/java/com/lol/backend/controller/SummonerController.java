@@ -41,6 +41,11 @@ public class SummonerController {
         return ResponseEntity.ok(gameService.getLastGamePlayer(name, tag));
     }
 
+    @GetMapping("/friends/lastgame")
+    public ResponseEntity<List<ParticipantDto>> getLastGameFriends() {
+        return ResponseEntity.ok(gameService.getLastGameFriends());
+    }
+
     @GetMapping("/{name}/{tag}/game/{index}")
     public ResponseEntity<GameDto> getGame(@PathVariable String name, @PathVariable String tag,
             @PathVariable int index) {

@@ -17,102 +17,105 @@ import static org.mockito.Mockito.*;
 
 class GameServiceTest {
 
-    @Mock
-    private RestTemplate restTemplate;
+        @Mock
+        private RestTemplate restTemplate;
 
-    @Mock
-    private AccountService accountService;
+        @Mock
+        private AccountService accountService;
 
-    @InjectMocks
-    private GameService gameService;
+        @Mock
+        private FriendService friendService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        gameService = new GameService(restTemplate, accountService, "API_KEY");
-    }
+        @InjectMocks
+        private GameService gameService;
 
-    @Test
-    void shouldReturnGamePreview() throws Exception {
-        String puuid = "puuid123";
+        @BeforeEach
+        void setUp() {
+                MockitoAnnotations.openMocks(this);
+                gameService = new GameService(restTemplate, accountService, friendService, "API_KEY");
+        }
 
-        when(accountService.getAccount("Caps", "EUW"))
-                .thenReturn(new AccountDto("Caps", "EUW", puuid));
+        @Test
+        void shouldReturnGamePreview() throws Exception {
+                String puuid = "puuid123";
 
-        ResponseEntity<String> matchIdResponse = new ResponseEntity<>(
-                "[\"MATCH_1\"]",
-                HttpStatus.OK);
+                when(accountService.getAccount("Caps", "EUW"))
+                                .thenReturn(new AccountDto("Caps", "EUW", puuid));
 
-        String matchDetailsJson = """
-                {
-                  "metadata": { "matchId": "MATCH_1" },
-                  "info": {
-                    "gameDuration": 1800,
-                    "gameMode": "CLASSIC",
-                    "participants": [
-                      {
-                        "puuid": "puuid123",
-                        "summonerName": "Caps",
-                        "championName": "Ahri",
-                        "kills": 10,
-                        "deaths": 2,
-                        "assists": 5,
-                        "win": true,
-                        "goldEarned": 12000,
-                        "goldSpent": 11000,
-                        "totalDamageDealtToChampions": 20000,
-                        "totalDamageDealt": 50000,
-                        "totalDamageTaken": 15000,
-                        "visionScore": 20,
-                        "wardsPlaced": 5,
-                        "wardsKilled": 2,
-                        "totalMinionsKilled": 150,
-                        "neutralMinionsKilled": 10,
-                        "champLevel": 16,
-                        "turretKills": 2,
-                        "inhibitorKills": 1,
-                        "teamId": 100
-                      }
-                    ]
-                  }
-                }
-                """;
+                ResponseEntity<String> matchIdResponse = new ResponseEntity<>(
+                                "[\"MATCH_1\"]",
+                                HttpStatus.OK);
 
-        ResponseEntity<String> matchDetailsResponse = new ResponseEntity<>(
-                matchDetailsJson,
-                HttpStatus.OK);
+                String matchDetailsJson = """
+                                {
+                                  "metadata": { "matchId": "MATCH_1" },
+                                  "info": {
+                                    "gameDuration": 1800,
+                                    "gameMode": "CLASSIC",
+                                    "participants": [
+                                      {
+                                        "puuid": "puuid123",
+                                        "summonerName": "Caps",
+                                        "championName": "Ahri",
+                                        "kills": 10,
+                                        "deaths": 2,
+                                        "assists": 5,
+                                        "win": true,
+                                        "goldEarned": 12000,
+                                        "goldSpent": 11000,
+                                        "totalDamageDealtToChampions": 20000,
+                                        "totalDamageDealt": 50000,
+                                        "totalDamageTaken": 15000,
+                                        "visionScore": 20,
+                                        "wardsPlaced": 5,
+                                        "wardsKilled": 2,
+                                        "totalMinionsKilled": 150,
+                                        "neutralMinionsKilled": 10,
+                                        "champLevel": 16,
+                                        "turretKills": 2,
+                                        "inhibitorKills": 1,
+                                        "teamId": 100
+                                      }
+                                    ]
+                                  }
+                                }
+                                """;
 
-        when(restTemplate.exchange(
-                contains("ids"),
-                eq(HttpMethod.GET),
-                any(),
-                eq(String.class)))
-                .thenReturn(matchIdResponse);
+                ResponseEntity<String> matchDetailsResponse = new ResponseEntity<>(
+                                matchDetailsJson,
+                                HttpStatus.OK);
 
-        when(restTemplate.exchange(
-                contains("matches/MATCH_1"),
-                eq(HttpMethod.GET),
-                any(),
-                eq(String.class)))
-                .thenReturn(matchDetailsResponse);
+                when(restTemplate.exchange(
+                                contains("ids"),
+                                eq(HttpMethod.GET),
+                                any(),
+                                eq(String.class)))
+                                .thenReturn(matchIdResponse);
 
-        GamePreviewDto result = gameService.getLastGamePreview("Caps", "EUW");
+                when(restTemplate.exchange(
+                                contains("matches/MATCH_1"),
+                                eq(HttpMethod.GET),
+                                any(),
+                                eq(String.class)))
+                                .thenReturn(matchDetailsResponse);
 
-        assertNotNull(result);
-        assertEquals("Ahri", result.getChampion());
-        assertEquals(10, result.getKills());
-        assertTrue(result.isWin());
-    }
+                GamePreviewDto result = gameService.getLastGamePreview("Caps", "EUW");
 
-    @Test
-    void shouldReturnErrorPreviewWhenApiFails() {
+                assertNotNull(result);
+                assertEquals("Ahri", result.getChampion());
+                assertEquals(10, result.getKills());
+                assertTrue(result.isWin());
+        }
 
-        when(accountService.getAccount(any(), any()))
-                .thenThrow(new RuntimeException());
+        @Test
+        void shouldReturnErrorPreviewWhenApiFails() {
 
-        GamePreviewDto result = gameService.getLastGamePreview("Test", "EUW");
+                when(accountService.getAccount(any(), any()))
+                                .thenThrow(new RuntimeException());
 
-        assertNotNull(result);
-        assertNull(result.getChampion());
-    }
+                GamePreviewDto result = gameService.getLastGamePreview("Test", "EUW");
+
+                assertNotNull(result);
+                assertNull(result.getChampion());
+        }
 }

@@ -10,6 +10,8 @@ import com.lol.backend.mapper.GamePreviewMapper;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,14 +22,17 @@ public class GameService {
 
     private final RestTemplate restTemplate;
     private final AccountService accountService;
+    private final FriendService friendService;
     private final String apiKey;
 
     public GameService(
             RestTemplate restTemplate,
             AccountService accountService,
+            FriendService friendService,
             @Value("${riot.api.key}") String apiKey) {
         this.restTemplate = restTemplate;
         this.accountService = accountService;
+        this.friendService = friendService;
         this.apiKey = apiKey;
     }
 
@@ -41,7 +46,17 @@ public class GameService {
 
         GameDto game = GameMapper.toDto(matchDetails);
 
-        return findPlayer(game, account.getPuuid());
+        ParticipantDto player = findPlayer(game, account.getPuuid());
+
+        return fillWithPlayerNameAndTag(account, player);
+    }
+
+    public List<ParticipantDto> getLastGameFriends() {
+        List<ParticipantDto> res = friendService.getFriends().stream()
+                .map(f -> getLastGamePlayer(f.getName(), f.getTag()))
+                .toList();
+
+        return res;
     }
 
     public GameDto getGame(String name, String tag, int index) {
@@ -135,5 +150,38 @@ public class GameService {
                         .filter(p -> p.getPuuid().equals(puuid))
                         .findFirst()
                         .orElseThrow());
+    }
+
+    private ParticipantDto fillWithPlayerNameAndTag(AccountDto account, ParticipantDto player) {
+        return new ParticipantDto(
+                account.getName(),
+                player.getPuuid(),
+
+                player.getChampion(),
+                player.getChampionIcon(),
+                player.getChampionSplashArt(),
+
+                player.getKills(),
+                player.getDeaths(),
+                player.getAssists(),
+                player.isWin(),
+
+                player.getGoldEarned(),
+                player.getGoldSpent(),
+
+                player.getDamageDealtToChampions(),
+                player.getTotalDamageDealt(),
+                player.getDamageTaken(),
+
+                player.getVisionScore(),
+                player.getWardsPlaced(),
+                player.getWardsKilled(),
+
+                player.getCs(),
+                player.getKdaRatio(),
+                player.getLevel(),
+
+                player.getTurretKills(),
+                player.getInhibitorKills());
     }
 }

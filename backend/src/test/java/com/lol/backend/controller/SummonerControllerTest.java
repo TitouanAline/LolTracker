@@ -18,6 +18,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import static org.hamcrest.Matchers.hasSize;
+
 import java.util.List;
 
 @WebMvcTest(SummonerController.class)
@@ -53,24 +55,68 @@ public class SummonerControllerTest {
         @Test
         void shouldReturnLastGamePlayer() throws Exception {
 
-                ParticipantDto dto = new ParticipantDto("Caps",
-                                "1234",
-                                "Ahri",
-                                "",
-                                "",
-                                0, 0, 0,
-                                true, 0, 0,
-                                0, 0,
-                                0,
-                                0, 0, 0,
-                                0, 0, 0, 0, 0);
+                ParticipantDto yike = new ParticipantDto(
+                                "Yike",
+                                "puuid-yike-789",
+                                "LeeSin",
+                                "https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/LeeSin.png",
+                                "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/LeeSin_0.jpg",
+                                5, 4, 12,
+                                true,
+                                12000, 11000,
+                                15000, 22000, 18000,
+                                30, 10, 5,
+                                180, 4.3, 17,
+                                1, 0);
 
-                when(gameService.getLastGamePlayer("Caps", "EUW"))
-                                .thenReturn(dto);
+                when(gameService.getLastGamePlayer("Yike", "EUW"))
+                                .thenReturn(yike);
 
-                mockMvc.perform(get("/summoner/Caps/EUW/lastgame/player"))
+                mockMvc.perform(get("/summoner/Yike/EUW/lastgame/player"))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.champion").value("Ahri"));
+                                .andExpect(jsonPath("$.champion").value("LeeSin"));
+        }
+
+        @Test
+        void shouldReturnLastGameFriends() throws Exception {
+                ParticipantDto caps = new ParticipantDto(
+                                "Caps",
+                                "puuid-caps-123",
+                                "Ahri",
+                                "https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/Ahri.png",
+                                "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg",
+                                10, 2, 8,
+                                true,
+                                14500, 13000,
+                                28000, 35000, 12000,
+                                25, 8, 3,
+                                210, 9.0, 18,
+                                2, 1);
+
+                ParticipantDto hansSama = new ParticipantDto(
+                                "Hans Sama",
+                                "puuid-hans-456",
+                                "Jinx",
+                                "https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/Jinx.png",
+                                "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_0.jpg",
+                                14, 3, 6,
+                                true,
+                                16000, 14500,
+                                32000, 40000, 11000,
+                                18, 6, 2,
+                                250, 6.7, 18,
+                                3, 0);
+
+                List<ParticipantDto> friends = List.of(caps, hansSama);
+
+                when(gameService.getLastGameFriends())
+                                .thenReturn(friends);
+
+                mockMvc.perform(get("/summoner/friends/lastgame"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$", hasSize(2)))
+                                .andExpect(jsonPath("$[0].champion").value("Ahri"))
+                                .andExpect(jsonPath("$[1].champion").value("Jinx"));
         }
 
         @Test

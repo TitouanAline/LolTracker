@@ -1,0 +1,15 @@
+@import '../../shared/styles/_layout.css';
+@import '../../shared/styles/_typography.css';
+@import '../../shared/styles/_preview-card.css';
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.search-box input {
+  flex: 1;
+  max-width: 200px;
+}

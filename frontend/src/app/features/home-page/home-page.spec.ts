@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SummonerComponent } from './summoner';
+import { HomePageComponent } from './home-page';
 
 describe('Summoner', () => {
-  let component: SummonerComponent;
-  let fixture: ComponentFixture<SummonerComponent>;
+  let component: HomePageComponent;
+  let fixture: ComponentFixture<HomePageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SummonerComponent],
+      imports: [HomePageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SummonerComponent);
+    fixture = TestBed.createComponent(HomePageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

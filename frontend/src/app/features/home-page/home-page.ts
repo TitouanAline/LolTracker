@@ -7,13 +7,13 @@ import { GameService } from '../../core/services/game.service';
 import { ParticipantDto } from '../../core/models/participant.dto';
 
 @Component({
-  selector: 'app-summoner',
+  selector: 'app-home-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './temp.html',
-  styleUrls: ['./temp.css'],
+  templateUrl: './home-page.html',
+  styleUrls: ['./home-page.css'],
 })
-export class SummonerComponent {
+export class HomePageComponent {
   constructor(private gameService: GameService) {}
 
   name = signal('');

@@ -1,0 +1,20 @@
+<div *ngIf="data" class="preview-card">
+  <div class="left">
+    <img class="champion-icon" [src]="data.championIcon" />
+
+    <div class="info">
+      <p class="name">{{ data.name }}</p>
+      <p class="champ">{{ data.champion }}</p>
+      <p class="kda">{{ data.kills }} / {{ data.deaths }} / {{ data.assists }}</p>
+      <p class="ratio">{{ data.kdaRatio | number: '1.1-1' }}</p>
+
+      <p [ngClass]="data.win ? 'win' : 'lose'">
+        {{ data.win ? 'Victory' : 'Defeat' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="right">
+    <img class="splash" [src]="data.championSplashArt" />
+  </div>
+</div>

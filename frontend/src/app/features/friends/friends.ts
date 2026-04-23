@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
   selector: 'app-friends',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './friends.html',
-  styleUrls: ['./friends.css'],
+  templateUrl: './temp.html',
+  styleUrls: ['./temp.css'],
 })
 export class FriendsComponent implements OnInit {
   constructor(

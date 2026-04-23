@@ -6,10 +6,12 @@ import { finalize } from 'rxjs';
 import { GameService } from '../../core/services/game.service';
 import { ParticipantDto } from '../../core/models/participant.dto';
 
+import { GamePreviewComponent } from '../../shared/components/game-preview/game-preview';
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GamePreviewComponent],
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.css'],
 })
@@ -36,13 +38,5 @@ export class HomePageComponent {
         next: (data) => this.result.set(data),
         error: () => this.error.set('Erreur API'),
       });
-  }
-
-  formatNumber(value: number | null): string {
-    if (!value) return '0';
-    if (value >= 1000) {
-      return (value / 1000).toFixed(1).replace('.0', '') + 'k';
-    }
-    return value.toString();
   }
 }

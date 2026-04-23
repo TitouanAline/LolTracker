@@ -8,31 +8,18 @@
       <button (click)="search()">Search</button>
     </div>
 
+    <!-- LOADING -->
     <div *ngIf="loading()" class="center-block">
       <div class="spinner"></div>
       <p>Loading...</p>
     </div>
 
+    <!-- ERROR -->
     <div *ngIf="!loading() && error()" class="center-block">
       <p class="error">{{ error() }}</p>
     </div>
 
-    <div *ngIf="!loading() && result() as result" class="preview-card">
-      <div class="left">
-        <img class="champion-icon" [src]="result.championIcon" />
-
-        <div class="info">
-          <p class="name">{{ result.name }}</p>
-          <p class="champ">{{ result.champion }}</p>
-          <p class="kda">{{ result.kills }} / {{ result.deaths }} / {{ result.assists }}</p>
-          <p class="ratio">{{ result.kdaRatio | number: '1.1-1' }}</p>
-          <p class="win">{{ result.win ? 'Victory' : 'Defeat' }}</p>
-        </div>
-      </div>
-
-      <div class="right">
-        <img class="splash" [src]="result.championSplashArt" />
-      </div>
-    </div>
+    <!-- RESULT -->
+    <app-game-preview *ngIf="!loading() && result() as result" [data]="result"> </app-game-preview>
   </div>
 </div>

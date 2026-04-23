@@ -1,0 +1,64 @@
+<div class="app">
+  <div class="container">
+    <div class="card">
+      <h1>Friend Tracker</h1>
+
+      <!-- LOADING -->
+      <div *ngIf="loading()">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
+
+      <!-- ERROR -->
+      <div *ngIf="!loading() && error()">
+        <p class="error">{{ error() }}</p>
+      </div>
+      <div class="friends-scroll">
+        <div
+          *ngFor="let f of friends()"
+          class="friend-card"
+          [class.error]="f.error"
+          (click)="goToDetail(f)"
+        >
+          <ng-container *ngIf="!f.error; else errorTpl">
+            <!-- LEFT -->
+            <div class="left">
+              <img [src]="f.championIcon" class="icon" />
+
+              <div class="info">
+                <p class="name">{{ f.name }}</p>
+                <p class="champ">{{ f.champion }}</p>
+
+                <p class="kda">{{ f.kills }} / {{ f.deaths }} / {{ f.assists }}</p>
+
+                <p [ngClass]="f.win ? 'win' : 'lose'">
+                  {{ f.win ? 'Victory' : 'Defeat' }}
+                </p>
+              </div>
+              <div class="info">
+                <p>
+                  <img src="assets/icon/gold.svg" class="stat-icon" />
+                  {{ formatNumber(f.goldEarned) }}
+                </p>
+                <p class="stats">⚔️ {{ formatNumber(f.damageDealt) }}</p>
+                <p>
+                  <img src="assets/icon/Ward_icon.webp" class="stat-icon" />
+                  {{ f.visionScore }}
+                </p>
+              </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="right">
+              <img [src]="f.championSplashArt" class="splash-img" />
+            </div>
+          </ng-container>
+
+          <ng-template #errorTpl>
+            <p class="error">{{ f.name }} ❌</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 
   border-radius: 12px;
   overflow: hidden;
@@ -12,6 +13,34 @@
   box-shadow:
     0 0 20px rgba(200, 155, 60, 0.2),
     inset 0 0 10px rgba(200, 155, 60, 0.1);
+
+  transition: all 0.25s ease;
+}
+
+.preview-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 10px 30px rgba(200, 155, 60, 0.4),
+    inset 0 0 15px rgba(200, 155, 60, 0.2);
+  cursor: pointer;
+}
+.preview-card:hover .splash {
+  transform: scale(1.05); /* 🔥 zoom léger */
+}
+.preview-card:hover .champion-icon {
+  box-shadow: 0 0 20px #c89b3c;
+  transform: scale(1.05);
+}
+.preview-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 60%, rgba(200, 155, 60, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.preview-card:hover::after {
+  opacity: 1;
 }
 
 .left {
@@ -34,6 +63,8 @@
   width: 100%;
   height: auto;
   object-fit: cover;
+
+  transition: transform 0.4s ease;
 }
 
 .champion-icon {
@@ -49,6 +80,8 @@
 
   display: block;
   margin: 0 auto 50px;
+
+  transition: all 0.3s ease;
 }
 
 .info {

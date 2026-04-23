@@ -20,6 +20,10 @@
     </div>
 
     <!-- RESULT -->
-    <app-game-preview *ngIf="!loading() && result() as result" [data]="result"> </app-game-preview>
+    <app-game-preview
+      *ngIf="!loading() && result() as result"
+      [data]="result"
+      (clicked)="goToDetail($event)"
+    ></app-game-preview>
   </div>
 </div>

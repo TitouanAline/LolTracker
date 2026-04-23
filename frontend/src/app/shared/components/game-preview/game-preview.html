@@ -1,4 +1,4 @@
-<div *ngIf="data" class="preview-card">
+<div *ngIf="data" class="preview-card" (click)="onClick()">
   <div class="left">
     <img class="champion-icon" [src]="data.championIcon" />
 

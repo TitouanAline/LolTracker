@@ -1,21 +1,19 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RiotService } from '../../core/services/riot.service';
-import { FriendGameDetailDto } from '../../core/models/friend-game-details.dto';
-import { Router } from '@angular/router';
 
 import { GamePreviewComponent } from '../../shared/components/game-preview/game-preview';
 import { ParticipantDto } from '../../core/models/participant.dto';
 import { GameService } from '../../core/services/game.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-friends',
   standalone: true,
   imports: [CommonModule, GamePreviewComponent],
-  templateUrl: './temp.html',
-  styleUrls: ['./temp.css'],
+  templateUrl: './friends-page.html',
+  styleUrls: ['./friends-page.css'],
 })
-export class FriendsComponent implements OnInit {
+export class FriendsPageComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private router: Router,
@@ -43,5 +41,9 @@ export class FriendsComponent implements OnInit {
       return (value / 1000).toFixed(1).replace('.0', '') + 'k';
     }
     return value.toString();
+  }
+
+  goToDetail(player: ParticipantDto) {
+    this.router.navigate(['/game', player.puuid]);
   }
 }

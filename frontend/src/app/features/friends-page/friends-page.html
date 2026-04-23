@@ -15,7 +15,11 @@
       </div>
 
       <div class="friends-scroll">
-        <app-game-preview *ngFor="let f of friends()" [data]="f"></app-game-preview>
+        <app-game-preview
+          *ngFor="let f of friends()"
+          [data]="f"
+          (clicked)="goToDetail($event)"
+        ></app-game-preview>
       </div>
     </div>
   </div>

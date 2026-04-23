@@ -2,10 +2,8 @@ package com.lol.backend.service;
 
 import com.lol.backend.dto.AccountDto;
 import com.lol.backend.dto.GameDto;
-import com.lol.backend.dto.GamePreviewDto;
 import com.lol.backend.dto.ParticipantDto;
 import com.lol.backend.mapper.GameMapper;
-import com.lol.backend.mapper.GamePreviewMapper;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -68,28 +66,6 @@ public class GameService {
         JsonNode matchDetails = getMatchDetails(matchId);
 
         return GameMapper.toDto(matchDetails);
-    }
-
-    public GamePreviewDto getLastGamePreview(String name, String tag) {
-
-        try {
-            AccountDto account = accountService.getAccount(name, tag);
-
-            String matchId = getMatchId(account.getPuuid(), 0);
-
-            JsonNode matchDetails = getMatchDetails(matchId);
-
-            GameDto game = GameMapper.toDto(matchDetails);
-
-            ParticipantDto player = findPlayer(game, account.getPuuid());
-
-            return GamePreviewMapper.from(
-                    name, tag, account.getPuuid(),
-                    player);
-
-        } catch (Exception e) {
-            return GamePreviewMapper.error(name, tag);
-        }
     }
 
     private String getMatchId(String puuid, int index) {

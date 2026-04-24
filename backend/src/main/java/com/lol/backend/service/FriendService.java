@@ -32,4 +32,11 @@ public class FriendService {
     public boolean alreadyExists(Friend friend) {
         return repository.existsByNameAndTag(friend.getName(), friend.getTag());
     }
+
+    public void removeFriend(String name, String tag) {
+        Friend friend = repository.findByNameAndTag(name, tag);
+        if (friend != null) {
+            repository.delete(friend);
+        }
+    }
 }

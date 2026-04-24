@@ -16,4 +16,8 @@ export class FriendService {
   alreadyExists(name: string, tag: string) {
     return this.http.get<boolean>(`${this.apiUrl}/doAlreadyExists/${name}/${tag}`);
   }
+
+  removeFriend(name: string, tag: string) {
+    return this.http.delete(`${this.apiUrl}/remove/${name}/${tag}`);
+  }
 }

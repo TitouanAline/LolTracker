@@ -5,4 +5,6 @@ import com.lol.backend.entity.Friend;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     boolean existsByNameAndTag(String name, String tag);
+
+    Friend findByNameAndTag(String name, String tag);
 }

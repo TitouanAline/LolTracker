@@ -2,6 +2,7 @@ package com.lol.backend.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +36,12 @@ public class FriendController {
     @GetMapping("/doAlreadyExists/{name}/{tag}")
     public Boolean alreadyExists(@PathVariable String name, @PathVariable String tag) {
         return service.alreadyExists(new Friend(name, tag));
+    }
+
+    @DeleteMapping("/remove/{name}/{tag}")
+    public void removeFriend(
+            @PathVariable String name,
+            @PathVariable String tag) {
+        service.removeFriend(name, tag);
     }
 }

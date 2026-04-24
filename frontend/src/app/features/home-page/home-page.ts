@@ -64,16 +64,21 @@ export class HomePageComponent {
     this.router.navigate(['/game', player.puuid]);
   }
 
-  addFriend(name: string, tag: string) {
-    if (!name || !tag) return;
-
-    this.friendService.addFriend(name, tag).subscribe({
-      next: () => {
-        this.isFriend.set(true);
-      },
-      error: (err) => {
-        console.error('Error saving friend', err);
-      },
-    });
+  toggleFriend(name: string, tag: string) {
+    if (this.isFriend()) {
+      this.friendService.removeFriend(name, tag).subscribe({
+        next: () => {
+          this.isFriend.set(false);
+          console.log('friend removed');
+        },
+      });
+    } else {
+      this.friendService.addFriend(name, tag).subscribe({
+        next: () => {
+          this.isFriend.set(true);
+          console.log('friend added');
+        },
+      });
+    }
   }
 }

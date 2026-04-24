@@ -25,6 +25,9 @@ export class HomePageComponent {
   name = signal('');
   tag = signal('');
 
+  validName = '';
+  validTag = '';
+
   loading = signal(false);
   error = signal('');
   result = signal<ParticipantDto | null>(null);
@@ -39,11 +42,21 @@ export class HomePageComponent {
       .getLastGamePlayer(this.name(), this.tag())
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (data) => this.result.set(data),
+        next: (data) => {
+          this.result.set(data);
+
+          this.validName = this.name();
+          this.validTag = this.tag();
+        },
         error: () => this.error.set('Erreur API'),
       });
   }
+
   goToDetail(player: ParticipantDto) {
     this.router.navigate(['/game', player.puuid]);
+  }
+
+  addFriend(name: any, tag: any) {
+    console.log(name, tag);
   }
 }

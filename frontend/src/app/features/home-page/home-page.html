@@ -25,5 +25,10 @@
       [data]="result"
       (clicked)="goToDetail($event)"
     ></app-game-preview>
+
+    <!-- ✅ Nouveau bouton -->
+    <button *ngIf="result()" class="save-btn" (click)="addFriend(validName, validTag)">
+      Add to Friends
+    </button>
   </div>
 </div>

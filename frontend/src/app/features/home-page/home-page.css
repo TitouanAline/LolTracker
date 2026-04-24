@@ -13,3 +13,29 @@
   flex: 1;
   max-width: 200px;
 }
+
+.save-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+
+  background: linear-gradient(145deg, #1e2328, #0a1428);
+  border: 1px solid #c8aa6e;
+
+  color: #c8aa6e;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  border-radius: 4px;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+  background: linear-gradient(145deg, #2a2f36, #111);
+  color: #f0e6d2;
+  border-color: #f0e6d2;
+
+  box-shadow: 0 0 8px rgba(200, 170, 110, 0.6);
+}

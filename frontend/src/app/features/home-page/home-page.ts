@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { GameService } from '../../core/services/game.service';
+import { FriendService } from '../../core/services/friend.service';
 import { ParticipantDto } from '../../core/models/participant.dto';
 
 import { GamePreviewComponent } from '../../shared/components/game-preview/game-preview';
@@ -19,11 +20,14 @@ import { Router } from '@angular/router';
 export class HomePageComponent {
   constructor(
     private gameService: GameService,
+    private friendService: FriendService,
     private router: Router,
   ) {}
 
   name = signal('');
   tag = signal('');
+
+  isFriend = signal(false);
 
   validName = '';
   validTag = '';
@@ -45,6 +49,10 @@ export class HomePageComponent {
         next: (data) => {
           this.result.set(data);
 
+          this.friendService.alreadyExists(this.name(), this.tag()).subscribe((exists) => {
+            this.isFriend.set(exists);
+          });
+
           this.validName = this.name();
           this.validTag = this.tag();
         },
@@ -56,7 +64,16 @@ export class HomePageComponent {
     this.router.navigate(['/game', player.puuid]);
   }
 
-  addFriend(name: any, tag: any) {
-    console.log(name, tag);
+  addFriend(name: string, tag: string) {
+    if (!name || !tag) return;
+
+    this.friendService.addFriend(name, tag).subscribe({
+      next: () => {
+        this.isFriend.set(true);
+      },
+      error: (err) => {
+        console.error('Error saving friend', err);
+      },
+    });
   }
 }

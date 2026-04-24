@@ -21,6 +21,15 @@ public class FriendService {
     }
 
     public Friend addFriend(Friend friend) {
+
+        if (alreadyExists(friend)) {
+            return friend;
+        }
+
         return repository.save(friend);
+    }
+
+    public boolean alreadyExists(Friend friend) {
+        return repository.existsByNameAndTag(friend.getName(), friend.getTag());
     }
 }

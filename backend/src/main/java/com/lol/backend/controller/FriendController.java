@@ -3,6 +3,7 @@ package com.lol.backend.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,10 @@ public class FriendController {
     @PostMapping
     public Friend add(@RequestBody Friend friend) {
         return service.addFriend(friend);
+    }
+
+    @GetMapping("/doAlreadyExists/{name}/{tag}")
+    public Boolean alreadyExists(@PathVariable String name, @PathVariable String tag) {
+        return service.alreadyExists(new Friend(name, tag));
     }
 }

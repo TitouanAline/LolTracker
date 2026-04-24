@@ -27,8 +27,13 @@
     ></app-game-preview>
 
     <!-- ✅ Nouveau bouton -->
-    <button *ngIf="result()" class="save-btn" (click)="addFriend(validName, validTag)">
-      Add to Friends
+    <button
+      *ngIf="result()"
+      class="save-btn"
+      [disabled]="isFriend()"
+      (click)="addFriend(validName, validTag)"
+    >
+      {{ isFriend() ? 'Already Friend' : 'Add Friend' }}
     </button>
   </div>
 </div>

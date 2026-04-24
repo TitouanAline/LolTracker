@@ -46,4 +46,9 @@ public class SummonerController {
             @PathVariable int index) {
         return ResponseEntity.ok(gameService.getGame(name, tag, index));
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "ok";
+    }
 }

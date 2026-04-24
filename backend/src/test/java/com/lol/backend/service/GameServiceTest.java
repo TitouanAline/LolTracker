@@ -13,7 +13,7 @@ import org.mockito.*;
 import org.springframework.web.client.RestTemplate;
 
 import com.lol.backend.dto.ParticipantDto;
-import com.lol.backend.model.Friend;
+import com.lol.backend.entity.Friend;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

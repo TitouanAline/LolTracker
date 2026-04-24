@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FriendsDetailComponent } from './friend-detail';
+import { SummonerDetailedPageComponent } from './summoner-detailed-page';
 
 describe('FriendDetail', () => {
-  let component: FriendsDetailComponent;
-  let fixture: ComponentFixture<FriendsDetailComponent>;
+  let component: SummonerDetailedPageComponent;
+  let fixture: ComponentFixture<SummonerDetailedPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FriendsDetailComponent],
+      imports: [SummonerDetailedPageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FriendsDetailComponent);
+    fixture = TestBed.createComponent(SummonerDetailedPageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

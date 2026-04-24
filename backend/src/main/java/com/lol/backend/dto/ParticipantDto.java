@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ParticipantDto {
     private String name;
+    private String tag;
     private String puuid;
 
     private String champion;

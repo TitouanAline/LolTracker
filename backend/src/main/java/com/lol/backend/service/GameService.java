@@ -131,6 +131,7 @@ public class GameService {
     private ParticipantDto fillWithPlayerNameAndTag(AccountDto account, ParticipantDto player) {
         return new ParticipantDto(
                 account.getName(),
+                account.getTag(),
                 player.getPuuid(),
 
                 player.getChampion(),

@@ -81,6 +81,7 @@ public class SummonerControllerTest {
         void shouldReturnLastGameFriends() throws Exception {
                 ParticipantDto caps = new ParticipantDto(
                                 "Caps",
+                                "EUW",
                                 "puuid-caps-123",
                                 "Ahri",
                                 "https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/Ahri.png",
@@ -95,6 +96,7 @@ public class SummonerControllerTest {
 
                 ParticipantDto hansSama = new ParticipantDto(
                                 "Hans Sama",
+                                "EUW",
                                 "puuid-hans-456",
                                 "Jinx",
                                 "https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/Jinx.png",

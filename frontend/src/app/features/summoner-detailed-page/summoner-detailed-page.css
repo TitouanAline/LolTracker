@@ -1,0 +1,76 @@
+.page {
+  padding: 20px;
+  background: #0f1115;
+  color: #e6e6e6;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.splash {
+  width: 220px;
+  border-radius: 12px;
+  border: 2px solid #2c2f36;
+}
+
+.header-info h1 {
+  margin: 0;
+  color: #f0c674;
+}
+
+.puuid {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* WIN BADGE */
+.win-badge {
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.win {
+  background: #2ecc71;
+  color: black;
+}
+
+.lose {
+  background: #e74c3c;
+  color: white;
+}
+
+/* CARDS */
+.card {
+  background: #1a1d24;
+  border: 1px solid #2c2f36;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.card h2 {
+  color: #7aa2f7;
+}
+
+/* CHAMPION */
+.champion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+}

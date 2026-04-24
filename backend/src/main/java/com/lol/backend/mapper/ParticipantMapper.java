@@ -32,6 +32,7 @@ public class ParticipantMapper {
 
                 return new ParticipantDto(
                                 p.path("summonerName").asString(),
+                                p.path("tag").asString(),
                                 p.path("puuid").asString(),
 
                                 champion,

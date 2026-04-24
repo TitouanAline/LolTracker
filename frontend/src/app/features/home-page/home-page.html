@@ -26,7 +26,7 @@
       (clicked)="goToDetail($event)"
     ></app-game-preview>
 
-    <!-- ✅ Nouveau bouton -->
+    <!-- Nouveau bouton -->
     <button *ngIf="result()" class="save-btn" (click)="toggleFriend(validName, validTag)">
       {{ isFriend() ? 'Remove Friend' : 'Add Friend' }}
     </button>

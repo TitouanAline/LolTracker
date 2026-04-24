@@ -61,7 +61,7 @@ export class HomePageComponent {
   }
 
   goToDetail(player: ParticipantDto) {
-    this.router.navigate(['/game', player.puuid]);
+    this.router.navigate(['/game', player.name, player.tag]);
   }
 
   toggleFriend(name: string, tag: string) {

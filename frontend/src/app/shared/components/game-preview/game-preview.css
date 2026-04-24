@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 .preview-card:hover .splash {
-  transform: scale(1.05); /* 🔥 zoom léger */
+  transform: scale(1.05);
 }
 .preview-card:hover .champion-icon {
   box-shadow: 0 0 20px #c89b3c;

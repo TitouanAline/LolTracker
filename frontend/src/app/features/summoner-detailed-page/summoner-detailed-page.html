@@ -1,0 +1,65 @@
+<div class="page" *ngIf="summoner() as s">
+  <!-- HEADER -->
+  <div class="header">
+    <img [src]="s.championSplashArt" class="splash" />
+
+    <div class="header-info">
+      <h1>{{ s.name }}#{{ s.tag }}</h1>
+
+      <div class="win-badge" [class.win]="s.win" [class.lose]="!s.win">
+        {{ s.win ? 'VICTORY' : 'DEFEAT' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAMPION -->
+  <div class="card">
+    <h2>🎮 Champion</h2>
+
+    <div class="champion">
+      <img [src]="s.championIcon" class="icon" />
+      <p>
+        <strong>{{ s.champion }}</strong> (Lvl {{ s.level }})
+      </p>
+    </div>
+
+    <p><strong>KDA:</strong> {{ s.kills }}/{{ s.deaths }}/{{ s.assists }}</p>
+    <p><strong>KDA Ratio:</strong> {{ s.kdaRatio | number: '1.2-2' }}</p>
+  </div>
+
+  <!-- ECONOMY -->
+  <div class="card">
+    <h2>💰 Economy</h2>
+
+    <p><strong>Gold Earned:</strong> {{ s.goldEarned }}</p>
+    <p><strong>Gold Spent:</strong> {{ s.goldSpent }}</p>
+
+    <p><strong>CS:</strong> {{ s.cs }}</p>
+  </div>
+
+  <!-- DAMAGE -->
+  <div class="card">
+    <h2>⚔️ Damage</h2>
+
+    <p><strong>To Champions:</strong> {{ s.damageDealtToChampions }}</p>
+    <p><strong>Total Damage:</strong> {{ s.totalDamageDealt }}</p>
+    <p><strong>Damage Taken:</strong> {{ s.damageTaken }}</p>
+  </div>
+
+  <!-- VISION -->
+  <div class="card">
+    <h2>👁️ Vision</h2>
+
+    <p><strong>Vision Score:</strong> {{ s.visionScore }}</p>
+    <p><strong>Wards Placed:</strong> {{ s.wardsPlaced }}</p>
+    <p><strong>Wards Killed:</strong> {{ s.wardsKilled }}</p>
+  </div>
+
+  <!-- OBJECTIVES -->
+  <div class="card">
+    <h2>🏆 Objectives</h2>
+
+    <p><strong>Towers:</strong> {{ s.turretKills }}</p>
+    <p><strong>Inhibitors:</strong> {{ s.inhibitorKills }}</p>
+  </div>
+</div>

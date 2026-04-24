@@ -57,6 +57,7 @@ public class SummonerControllerTest {
 
                 ParticipantDto yike = new ParticipantDto(
                                 "Yike",
+                                "EUW",
                                 "puuid-yike-789",
                                 "LeeSin",
                                 "https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/LeeSin.png",

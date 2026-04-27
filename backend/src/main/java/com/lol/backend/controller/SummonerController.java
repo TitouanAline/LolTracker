@@ -13,7 +13,7 @@ import com.lol.backend.service.GameService;
 
 @RestController
 @RequestMapping("/summoner")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class SummonerController {
 
     private final AccountService accountService;

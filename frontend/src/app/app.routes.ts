@@ -4,10 +4,15 @@ import { FriendsPageComponent } from './features/friends-page/friends-page';
 import { SummonerDetailedPageComponent } from './features/summoner-detailed-page/summoner-detailed-page';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
-  { path: 'friends', component: FriendsPageComponent },
+  {
+    path: 'friends',
+    component: FriendsPageComponent,
+    canActivate: [authGuard],
+  },
   { path: 'game/:name/:tag', component: SummonerDetailedPageComponent },
   { path: 'login', component: Login },
   { path: 'register', component: Register },

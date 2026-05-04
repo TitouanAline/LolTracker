@@ -1,11 +1,19 @@
 <nav class="navbar">
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"> Home </a>
+  <div class="nav-left">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      Home
+    </a>
 
-  <a routerLink="/friends" routerLinkActive="active"> Friends </a>
+    <a routerLink="/friends" routerLinkActive="active"> Friends </a>
+  </div>
 
-  <a *ngIf="!authState.isLoggedIn()" routerLink="/login" routerLinkActive="active"> Login </a>
+  <div class="nav-right">
+    <span *ngIf="authState.isLoggedIn()" class="username">
+      {{ authState.user()?.username }}
+    </span>
+    <a *ngIf="authState.isLoggedIn()" (click)="logout()" class="logout"> Logout </a>
 
-  <a *ngIf="!authState.isLoggedIn()" routerLink="/register" routerLinkActive="active"> Register </a>
-
-  <a *ngIf="authState.isLoggedIn()" (click)="logout()" style="cursor: pointer"> Logout </a>
+    <a *ngIf="!authState.isLoggedIn()" routerLink="/login"> Login </a>
+    <a *ngIf="!authState.isLoggedIn()" routerLink="/register"> Register </a>
+  </div>
 </nav>

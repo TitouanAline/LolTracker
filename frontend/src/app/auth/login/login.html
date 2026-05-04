@@ -1,17 +1,20 @@
-<h2>Login</h2>
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Connexion</h2>
 
-<div>
-  <input type="email" [(ngModel)]="email" placeholder="Email" />
+    <input type="email" [(ngModel)]="email" placeholder="Email" />
+
+    <input type="password" [(ngModel)]="password" placeholder="Mot de passe" />
+
+    <button (click)="login()">Se connecter</button>
+
+    <p class="switch">
+      Pas de compte ?
+      <a routerLink="/register">Créer un compte</a>
+    </p>
+
+    <p class="error" *ngIf="error">
+      {{ error }}
+    </p>
+  </div>
 </div>
-
-<div>
-  <input type="password" [(ngModel)]="password" placeholder="Password" />
-</div>
-
-<button (click)="login()">Login</button>
-
-<br /><br />
-
-<button routerLink="/register">Pas de compte ? S'inscrire</button>
-
-<p *ngIf="error" style="color: red">{{ error }}</p>

@@ -9,7 +9,7 @@ import { AuthStateService } from '../../core/state/auth-state.service';
   selector: 'app-login',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./../auth.styles.css'],
 })
 export class Login {
   email = '';

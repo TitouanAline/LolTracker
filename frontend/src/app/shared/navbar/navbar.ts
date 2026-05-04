@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthStateService } from '../../core/state/auth-state.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,4 +10,10 @@ import { RouterModule } from '@angular/router';
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css'],
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  constructor(public authState: AuthStateService) {}
+  logout() {
+    this.authState.logout();
+    window.location.href = '/login';
+  }
+}

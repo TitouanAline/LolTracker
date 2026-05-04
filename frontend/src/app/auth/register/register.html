@@ -1,0 +1,21 @@
+<h2>Register</h2>
+
+<div>
+  <input [(ngModel)]="username" placeholder="Username" />
+</div>
+
+<div>
+  <input type="email" [(ngModel)]="email" placeholder="Email" />
+</div>
+
+<div>
+  <input type="password" [(ngModel)]="password" placeholder="Password" />
+</div>
+
+<button (click)="register()">Register</button>
+
+<br /><br />
+
+<button routerLink="/login">Déjà un compte ? Se connecter</button>
+
+<p *ngIf="error" style="color: red">{{ error }}</p>

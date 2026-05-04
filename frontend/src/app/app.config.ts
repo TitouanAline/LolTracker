@@ -1,4 +1,9 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
@@ -8,6 +13,11 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { AuthStateService } from './core/state/auth-state.service';
+
+export function initAuth(auth: AuthStateService) {
+  return () => auth.init();
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +26,9 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
+    provideAppInitializer(() => {
+      const auth = inject(AuthStateService);
+      auth.init();
+    }),
   ],
 };

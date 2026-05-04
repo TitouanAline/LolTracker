@@ -17,9 +17,11 @@ export class AuthStateService {
   }
 
   loadUser() {
-    this.http.get('http://localhost:8080/auth/me').subscribe((user) => {
-      this._user.set(user);
-      this._isLoggedIn.set(true);
+    this.http.get('http://localhost:8080/auth/me').subscribe({
+      next: (user) => this._user.set(user),
+      error: () => {
+        this.logout();
+      },
     });
   }
 
@@ -33,5 +35,14 @@ export class AuthStateService {
     localStorage.removeItem('token');
     this._isLoggedIn.set(false);
     this._user.set(null);
+  }
+
+  init() {
+    const token = localStorage.getItem('token');
+
+    if (!token) return;
+
+    this._isLoggedIn.set(true);
+    this.loadUser();
   }
 }

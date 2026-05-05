@@ -11,7 +11,7 @@ export class FriendService {
   constructor(private http: HttpClient) {}
 
   addFriend(name: string, tag: string) {
-    return this.http.post(this.apiUrl, { name, tag });
+    return this.http.post(this.apiUrl + '/add', { name, tag });
   }
 
   alreadyExists(name: string, tag: string) {

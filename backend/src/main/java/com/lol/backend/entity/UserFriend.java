@@ -1,36 +1,38 @@
 package com.lol.backend.entity;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
-public class User {
+@Table(name = "user_friends")
+public class UserFriend {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-
-    private String email;
-
+    @ManyToOne
     @JsonIgnore
-    private String password;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserFriend> friends;
+    @ManyToOne
+    @JoinColumn(name = "friend_id")
+    private Friend friend;
 
+    private LocalDateTime addedAt = LocalDateTime.now();
 }

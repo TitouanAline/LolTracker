@@ -10,7 +10,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final String SECRET = "THIS_IS_A_DEVELOPMENT_SECRET_KEY_CHANGE_ME_123456";
+    private final String SECRET = "${jwt.secret}";
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());

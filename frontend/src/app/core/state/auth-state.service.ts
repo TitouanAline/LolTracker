@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
@@ -17,7 +18,7 @@ export class AuthStateService {
   }
 
   loadUser() {
-    this.http.get('http://localhost:8080/auth/me').subscribe({
+    this.http.get(`${environment.apiUrl}/auth/me`).subscribe({
       next: (user) => this._user.set(user),
       error: () => {
         this.logout();
